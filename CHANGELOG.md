@@ -49,3 +49,23 @@
   picked as the browser.
 - `test.sh`: without KVM, emulate a CPU without AVX. With QEMU's emulated
   AVX, Mesa's software renderer crashed plasmashell.
+
+## Stage 4: RibOS branding
+- Original artwork only (`branding/src/*.svg`, CC0): ribbon-"R" logo,
+  light/dark ribbon wallpaper, boot menu background, Plymouth logo,
+  installer slides. `branding/render.sh` turns them into PNGs.
+- Boot menus: custom GRUB (UEFI) theme and grub.cfg ("Try or install
+  RibOS", safe graphics, fail-safe, utilities) and matching isolinux (BIOS)
+  menu, both with a 5 s timeout.
+- Plymouth: `ribos` script theme with the logo, an animated progress bar
+  and an encrypted-disk password prompt. Set as default; initramfs rebuilt.
+- `/etc/os-release` says RibOS (`ID=ribos`, `ID_LIKE=debian`). Debian's
+  copy is diverted so base-files upgrades don't undo it. Plasma's Welcome
+  Center and "About this System" pick this up.
+- Installed systems: GRUB distributor "RibOS", `quiet splash`.
+- Flathub enabled system-wide at build time (Discover sees it immediately).
+- Global theme preview images taken from real screenshots.
+- Live session only (live-config component): no automatic screen lock or
+  suspend, since the live password isn't obvious.
+- Dark-mode button rewritten after it didn't show on the panel; it now
+  follows the structure of Plasma's own "Show Desktop" button.

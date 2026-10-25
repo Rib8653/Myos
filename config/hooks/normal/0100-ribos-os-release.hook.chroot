@@ -5,9 +5,10 @@
 # don't put the Debian text back.
 set -e
 
-dpkg-divert --quiet --local --rename --add --divert /usr/lib/os-release.debian /usr/lib/os-release
-dpkg-divert --quiet --local --rename --add --divert /etc/issue.debian /etc/issue
-dpkg-divert --quiet --local --rename --add --divert /etc/issue.net.debian /etc/issue.net
+for f in /usr/lib/os-release /etc/issue /etc/issue.net; do
+	[ -e "$f.debian" ] || cp -a "$f" "$f.debian"
+	dpkg-divert --quiet --local --no-rename --add --divert "$f.debian" "$f"
+done
 
 . /usr/lib/os-release.debian   # for VERSION_ID / VERSION_CODENAME of the Debian base
 

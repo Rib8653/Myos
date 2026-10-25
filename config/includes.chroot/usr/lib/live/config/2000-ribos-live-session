@@ -1,0 +1,41 @@
+#!/bin/sh
+# RibOS: live session tweaks (runs at boot of the live ISO only; live-config
+# is removed from installed systems). The live user's password ("live") is
+# not obvious, so never lock the screen or suspend on idle.
+
+. /usr/lib/live/config.sh
+
+for _PARAMETER in ${LIVE_CONFIG_CMDLINE}; do
+	case "${_PARAMETER}" in
+		live-config.username=*|username=*) LIVE_USERNAME="${_PARAMETER#*username=}" ;;
+	esac
+done
+
+LIVE_USERNAME="${LIVE_USERNAME:-user}"
+component_was_executed "ribos-live-session" && exit 0
+echo -n " ribos-live-session"
+
+CONF="/home/${LIVE_USERNAME}/.config"
+[ -d "/home/${LIVE_USERNAME}" ] || exit 0
+mkdir -p "${CONF}"
+
+cat > "${CONF}/kscreenlockerrc" <<END
+[Daemon]
+Autolock=false
+LockOnResume=false
+END
+
+cat > "${CONF}/powerdevilrc" <<END
+[AC][SuspendAndShutdown]
+AutoSuspendAction=0
+
+[Battery][SuspendAndShutdown]
+AutoSuspendAction=0
+
+[LowBattery][SuspendAndShutdown]
+AutoSuspendAction=0
+END
+
+chown -R "${LIVE_USERNAME}:${LIVE_USERNAME}" "${CONF}"
+
+touch /var/lib/live/config/ribos-live-session
