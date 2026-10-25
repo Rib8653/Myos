@@ -101,3 +101,20 @@
 - Fixed `build.sh` writing an empty `config/environment.chroot` on hosts
   without a proxy; live-build's grep of that file aborted the first
   GitHub build. The second run built and published the ISO in ~33 minutes.
+
+## arm64 build
+- `build.sh --arch arm64` (or `RIBOS_ARCH=arm64`) builds an arm64 ISO.
+  `auto/config` picks GRUB EFI only for arm64 (Arm machines have no BIOS)
+  and adds live-build's QEMU options automatically when cross-building.
+- Package lists use live-build `#if ARCHITECTURE` blocks for the x86-only
+  packages (Intel/AMD microcode, grub-pc, grub-efi-amd64*) and the arm64
+  GRUB packages. Every other package exists on both architectures (checked
+  against the trixie arm64 index).
+- GRUB `config.cfg` only loads the PC-only video modules on x86.
+- `build.sh` clears the package cache when the architecture changes.
+- `test.sh --arm64` boots the arm64 ISO on QEMU's Arm `virt` machine with
+  UEFI firmware; virtual disks are kept per architecture under `test/`.
+- GitHub workflow: architecture choice (both/amd64/arm64), arm64 builds
+  natively on `ubuntu-24.04-arm`, and both ISOs go into one release.
+- README: arm64 build notes and a UTM-on-Mac guide; corrected the live
+  password (it's `live`).

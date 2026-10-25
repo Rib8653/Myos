@@ -8,8 +8,11 @@ firmware-atheros
 firmware-brcm80211
 firmware-intel-sound
 firmware-sof-signed
+#if ARCHITECTURE amd64
+# CPU microcode updates (Intel/AMD PCs only)
 amd64-microcode
 intel-microcode
+#endif
 firmware-amd-graphics
 firmware-mediatek
 firmware-libertas

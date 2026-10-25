@@ -1,10 +1,13 @@
 #!/bin/bash
 # Build the RibOS ISO from scratch.
 #
-#   sudo ./build.sh            clean build (keeps the downloaded package cache)
-#   sudo ./build.sh --purge    also wipe the package cache (fully from scratch)
+#   sudo ./build.sh                 clean amd64 build (keeps the package cache)
+#   sudo ./build.sh --arch arm64    clean arm64 build (Apple Silicon/UTM, Arm PCs)
+#   sudo ./build.sh --purge         also wipe the package cache (fully from scratch)
 #
-# The finished image is written to ./ribos-amd64.hybrid.iso
+# The finished image is written to ./ribos-<arch>.hybrid.iso
+# Building arm64 on an Intel/AMD machine (or the other way round) works through
+# QEMU emulation (needs qemu-user-static) but is several times slower.
 set -euo pipefail
 cd "$(dirname "$(readlink -f "$0")")"
 
@@ -12,21 +15,52 @@ if [ "$(id -u)" -ne 0 ]; then
 	exec sudo -E "$0" "$@"
 fi
 
+ARCH="${RIBOS_ARCH:-amd64}"
+PURGE=0
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--arch)   ARCH="${2:?--arch needs amd64 or arm64}"; shift 2 ;;
+		--arch=*) ARCH="${1#--arch=}"; shift ;;
+		--purge)  PURGE=1; shift ;;
+		*) sed -n '2,10p' "$0"; exit 1 ;;
+	esac
+done
+case "$ARCH" in
+	amd64|arm64) ;;
+	*) echo "Unsupported architecture: $ARCH (use amd64 or arm64)" >&2; exit 1 ;;
+esac
+export RIBOS_ARCH="$ARCH"   # read by auto/config
+
 for tool in lb debootstrap mksquashfs xorriso apt-ftparchive; do
 	command -v "$tool" >/dev/null || {
 		echo "Missing '$tool'. Install with:" >&2
-		echo "  sudo apt install live-build debootstrap squashfs-tools xorriso isolinux syslinux-common grub-pc-bin grub-efi-amd64-bin mtools dosfstools apt-utils" >&2
+		echo "  sudo apt install live-build debootstrap squashfs-tools xorriso mtools dosfstools apt-utils" >&2
+		echo "  (plus isolinux syslinux-common grub-pc-bin grub-efi-amd64-bin for amd64 builds)" >&2
 		exit 1
 	}
 done
 
-# Start from a clean tree.
-if [ "${1:-}" = "--purge" ]; then
+if [ "$ARCH" != "$(dpkg --print-architecture)" ]; then
+	qemu=/usr/bin/qemu-aarch64-static
+	[ "$ARCH" = amd64 ] && qemu=/usr/bin/qemu-x86_64-static
+	[ -x "$qemu" ] || {
+		echo "Cross-building $ARCH needs QEMU user emulation: sudo apt install qemu-user-static binfmt-support" >&2
+		exit 1
+	}
+	echo "Note: cross-building $ARCH through QEMU emulation; this takes several times longer."
+fi
+
+# Start from a clean tree. The package/bootstrap cache only holds one
+# architecture, so switching architectures also clears it.
+if [ "$PURGE" = 1 ]; then
+	lb clean --purge
+elif [ -f cache/.ribos-arch ] && [ "$(cat cache/.ribos-arch)" != "$ARCH" ]; then
+	echo "Architecture changed to $ARCH: clearing the package cache."
 	lb clean --purge
 else
 	lb clean
 fi
-rm -f ribos-amd64.hybrid.iso
+rm -f "ribos-$ARCH.hybrid.iso"
 
 # If the host reaches the internet through a proxy, pass it into the build
 # chroot (apt only). This file is host-specific, git-ignored and never ends
@@ -41,14 +75,15 @@ for var in http_proxy https_proxy no_proxy; do
 done
 
 lb config
+mkdir -p cache && echo "$ARCH" > cache/.ribos-arch
 lb build
 
-if [ -f live-image-amd64.hybrid.iso ]; then
-	mv live-image-amd64.hybrid.iso ribos-amd64.hybrid.iso
+if [ -f "live-image-$ARCH.hybrid.iso" ]; then
+	mv "live-image-$ARCH.hybrid.iso" "ribos-$ARCH.hybrid.iso"
 fi
-if [ -f ribos-amd64.hybrid.iso ]; then
-	ls -lh ribos-amd64.hybrid.iso
-	echo "Done. Test it with: ./test.sh"
+if [ -f "ribos-$ARCH.hybrid.iso" ]; then
+	ls -lh "ribos-$ARCH.hybrid.iso"
+	echo "Done. Test it with: ./test.sh$( [ "$ARCH" = arm64 ] && echo ' --arm64')"
 else
 	echo "Build failed: no ISO produced. See build.log" >&2
 	exit 1

@@ -1,2 +1,5 @@
 # Legacy BIOS boot loader for the ISO's package pool (see installer-efi.list.binary).
+# BIOS only exists on Intel/AMD PCs, so this is skipped for arm64.
+#if ARCHITECTURE amd64
 grub-pc
+#endif

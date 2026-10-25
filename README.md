@@ -6,9 +6,12 @@ a centered bottom taskbar, a start menu with search, pinned apps and power
 buttons, window snapping, Windows-style shortcuts and a light/dark toggle.
 
 It is built with Debian's official [`live-build`](https://live-team.pages.debian.net/live-manual/)
-and produces one hybrid ISO that boots from DVD or USB on both UEFI and legacy
-BIOS machines, runs as a live system and installs to disk with the Calamares
-graphical installer.
+and produces a hybrid ISO that boots from DVD or USB, runs as a live system and
+installs to disk with the Calamares graphical installer. Two architectures:
+
+* **amd64**: Intel/AMD PCs and Intel Macs, booting on UEFI and legacy BIOS.
+* **arm64**: Arm machines with UEFI, such as Apple Silicon Macs in UTM or
+  Parallels, and Arm laptops/servers.
 
 All artwork is original (see `branding/src`). RibOS mimics a familiar layout
 and behaviour only: it contains no Microsoft logos, fonts, wallpapers or icons.
@@ -25,11 +28,12 @@ sudo apt install live-build debootstrap squashfs-tools xorriso isolinux \
     syslinux-common grub-pc-bin grub-efi-amd64-bin mtools dosfstools apt-utils \
     qemu-system-x86 ovmf          # the last two only for test.sh
 
-sudo ./build.sh                   # clean build (reuses the package cache)
+sudo ./build.sh                   # clean amd64 build (reuses the package cache)
+sudo ./build.sh --arch arm64      # clean arm64 build
 sudo ./build.sh --purge           # clean build, re-downloading everything
 ```
 
-The result is `ribos-amd64.hybrid.iso` (about 2.7 GB), and the full log is
+The result is `ribos-amd64.hybrid.iso` or `ribos-arm64.hybrid.iso` (about 2.7 GB), and the full log is
 in `build.log`. A first build downloads about 2.5 GB of packages and takes
 30–60 minutes. Later builds reuse `cache/` and take about 25 minutes.
 
@@ -38,6 +42,14 @@ in `build.log`. A first build downloads about 2.5 GB of packages and takes
 > (it is architecture-independent):
 > `wget https://deb.debian.org/debian/pool/main/l/live-build/live-build_20250505+deb13u1_all.deb && sudo apt install ./live-build_*.deb`
 > and do the same for `debootstrap` and `debian-archive-keyring` if they are older than trixie.
+> `ci/install-live-build.sh` does all three for you.
+
+**arm64 builds** run fastest on an arm64 Debian/Ubuntu machine (for amd64
+builds you also need `isolinux syslinux-common grub-pc-bin grub-efi-amd64-bin`;
+for arm64, `grub-efi-arm64-bin` instead). An Intel/AMD machine can build arm64
+too, by emulating Arm with QEMU (`sudo apt install qemu-user-static
+binfmt-support`). That works but takes several times longer. Switching
+architecture clears the package cache, because it only holds one architecture.
 
 ### Building on GitHub (no Linux machine needed)
 
@@ -45,10 +57,11 @@ in `build.log`. A first build downloads about 2.5 GB of packages and takes
 for example from a Mac:
 
 1. On GitHub, open the repository's **Actions** tab, pick
-   **Build RibOS ISO**, then **Run workflow**. Pushing a tag such as `v1.0`
-   also starts a build.
-2. Wait about an hour. In a private repository this uses roughly 60 of the
-   free plan's 2,000 Actions minutes per month.
+   **Build RibOS ISO**, then **Run workflow** and choose `both`, `amd64` or
+   `arm64`. Pushing a tag such as `v1.0` builds both.
+2. Wait 30–60 minutes. amd64 builds on a normal runner and arm64 on GitHub's
+   Arm runner (`ubuntu-24.04-arm`, native, no emulation). In a private
+   repository both use your Actions minutes (free plan: 2,000 per month).
 3. Open **Releases** (right-hand side of the repository page). Each build
    publishes the ISO in parts (GitHub's limit is 2 GB per file) plus a
    checksum file. Download them all and join them as the release notes
@@ -71,13 +84,25 @@ HTTPS.
 ./test.sh --bios     # boot the ISO with legacy BIOS
 ./test.sh --disk     # boot what you installed onto the virtual disk
 ./test.sh --reset    # throw away the virtual disk and UEFI settings first
+./test.sh --arm64    # boot the arm64 ISO (needs qemu-system-arm qemu-efi-aarch64)
 RAM=8192 CPUS=4 ./test.sh
 ```
 
-A blank 32 GB virtual disk (`test/disk.qcow2`) is attached, so you can run
+A blank 32 GB virtual disk (`test/<arch>/disk.qcow2`) is attached, so you can run
 **Install RibOS** from the live desktop and then boot the result with
 `./test.sh --disk`. KVM is used automatically when `/dev/kvm` is available.
 Without it, QEMU emulates the CPU and the desktop is very slow.
+
+### UTM on a Mac (arm64 ISO on Apple Silicon)
+
+1. Install [UTM](https://mac.getutm.app/), then **Create a New Virtual Machine** → **Virtualize** → **Linux**.
+2. Tick nothing special; under *Boot ISO Image* pick `ribos-arm64.hybrid.iso`.
+3. Give it 4 GB+ RAM, 2+ CPU cores and a 32 GB+ disk. Finish and start it.
+4. After installing, open the VM's settings, remove the ISO from the CD drive
+   (or clear it in the toolbar's drive menu) and restart.
+
+Use the amd64 ISO only on Intel Macs. Apple Silicon would have to emulate it
+and runs it very slowly.
 
 ### VirtualBox
 
@@ -95,8 +120,9 @@ Write the ISO to a USB stick (this erases the stick):
 or use a tool like Ventoy, balenaEtcher or GNOME Disks.
 Secure Boot works through Debian's signed shim and GRUB.
 
-The live user is `ribos` with no password (live-config default). `sudo` works
-without a password in the live session.
+The live user is `ribos` with the password `live` (live-config default). It logs
+in automatically and never locks the screen; `sudo` works without a password in
+the live session.
 
 ---
 

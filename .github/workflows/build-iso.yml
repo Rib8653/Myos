@@ -1,15 +1,23 @@
-# Build the RibOS ISO on GitHub's Linux runners and publish it as a Release.
+# Build the RibOS ISOs on GitHub's Linux runners and publish them as a Release.
 #
-# Run it: Actions tab -> "Build RibOS ISO" -> "Run workflow".
-# Pushing a tag like v1.0 also builds and publishes a release with that name.
+# Run it: Actions tab -> "Build RibOS ISO" -> "Run workflow" (choose amd64,
+# arm64 or both). Pushing a tag like v1.0 builds both and publishes a release
+# with that name.
 #
-# The ISO (~2.7 GB) is bigger than GitHub's 2 GB per-file limit for release
-# assets, so it's uploaded in two parts plus a SHA-256 checksum. The release
-# notes explain how to join them.
+# amd64 builds on a normal Intel/AMD runner; arm64 builds natively on GitHub's
+# Arm runner (no emulation). Each ISO (~2.7 GB) is bigger than GitHub's 2 GB
+# per-file limit for release assets, so it's uploaded in parts plus a SHA-256
+# checksum. The release notes explain how to join them.
 name: Build RibOS ISO
 
 on:
   workflow_dispatch:
+    inputs:
+      arch:
+        description: Architecture to build
+        type: choice
+        options: [both, amd64, arm64]
+        default: both
   push:
     tags: ['v*']
 
@@ -17,13 +25,19 @@ permissions:
   contents: write
 
 concurrency:
-  group: build-iso
+  group: build-iso-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ fromJSON((github.event_name != 'workflow_dispatch' || inputs.arch == 'both') && '["amd64","arm64"]' || format('["{0}"]', inputs.arch)) }}
+    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     timeout-minutes: 300
+    env:
+      ISO: ribos-${{ matrix.arch }}.hybrid.iso
     steps:
       - uses: actions/checkout@v4
 
@@ -39,27 +53,32 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y squashfs-tools xorriso isolinux syslinux-common \
-            grub-pc-bin grub-efi-amd64-bin mtools dosfstools apt-utils rsync distro-info
+          pkgs="squashfs-tools xorriso mtools dosfstools apt-utils rsync distro-info"
+          if [ "${{ matrix.arch }}" = amd64 ]; then
+            pkgs="$pkgs isolinux syslinux-common grub-pc-bin grub-efi-amd64-bin"
+          else
+            pkgs="$pkgs grub-efi-arm64-bin"
+          fi
+          sudo apt-get install -y $pkgs
           ./ci/install-live-build.sh
 
       - name: Build ISO
-        run: sudo ./build.sh
+        run: sudo ./build.sh --arch ${{ matrix.arch }}
 
       - name: Upload build log on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: build-log
+          name: build-log-${{ matrix.arch }}
           path: build.log
           retention-days: 7
 
       - name: Split ISO for upload
         run: |
           mkdir out
-          sudo chown "$USER" ribos-amd64.hybrid.iso
-          sha256sum ribos-amd64.hybrid.iso > out/ribos-amd64.hybrid.iso.sha256
-          split -b 1900M -d -a 1 ribos-amd64.hybrid.iso out/ribos-amd64.hybrid.iso.part
+          sudo chown "$USER" "$ISO"
+          sha256sum "$ISO" > "out/$ISO.sha256"
+          split -b 1900M -d -a 1 "$ISO" "out/$ISO.part"
           ls -lh out
 
       - name: Publish release
@@ -69,28 +88,37 @@ jobs:
           if [ "${GITHUB_REF_TYPE}" = tag ]; then
             tag="${GITHUB_REF_NAME}"; extra=""
           else
-            tag="build-$(date -u +%Y%m%d)-${GITHUB_RUN_NUMBER}"; extra="--prerelease"
+            # Both architectures of one run share a release.
+            tag="build-${GITHUB_RUN_NUMBER}"; extra="--prerelease"
           fi
           cat > notes.md <<NOTES
-          RibOS ISO built from ${GITHUB_SHA::7}.
+          RibOS ISOs built from ${GITHUB_SHA::7}.
 
-          The ISO is split into parts because of GitHub's 2 GB file limit.
-          Download all \`.part\` files and the \`.sha256\` file into one folder, then join them:
+          - \`ribos-amd64.hybrid.iso\`: Intel/AMD PCs and Intel Macs (UEFI and legacy BIOS).
+          - \`ribos-arm64.hybrid.iso\`: Arm machines with UEFI, e.g. Apple Silicon Macs in UTM.
+
+          Each ISO is split into parts because of GitHub's 2 GB file limit.
+          Download all \`.part\` files of the one you want plus its \`.sha256\` file into one folder, then join them
+          (replace ARCH with amd64 or arm64):
 
           **macOS / Linux** (Terminal):
           \`\`\`
-          cat ribos-amd64.hybrid.iso.part* > ribos-amd64.hybrid.iso
-          shasum -a 256 -c ribos-amd64.hybrid.iso.sha256
+          cat ribos-ARCH.hybrid.iso.part* > ribos-ARCH.hybrid.iso
+          shasum -a 256 -c ribos-ARCH.hybrid.iso.sha256
           \`\`\`
 
           **Windows** (Command Prompt):
           \`\`\`
-          copy /b ribos-amd64.hybrid.iso.part0 + ribos-amd64.hybrid.iso.part1 ribos-amd64.hybrid.iso
-          certutil -hashfile ribos-amd64.hybrid.iso SHA256
+          copy /b ribos-ARCH.hybrid.iso.part0 + ribos-ARCH.hybrid.iso.part1 ribos-ARCH.hybrid.iso
+          certutil -hashfile ribos-ARCH.hybrid.iso SHA256
           \`\`\`
           (compare the result with the number in the \`.sha256\` file)
 
           Then write the ISO to a USB stick (balenaEtcher, Ventoy, Rufus) or boot it in a VM.
           NOTES
-          gh release create "$tag" out/* --target "${GITHUB_SHA}" \
-            --title "RibOS ${tag}" --notes-file notes.md $extra
+          # The first job to finish creates the release; the other adds its files.
+          if ! gh release view "$tag" > /dev/null 2>&1; then
+            gh release create "$tag" --target "${GITHUB_SHA}" --title "RibOS ${tag}" \
+              --notes-file notes.md $extra || true
+          fi
+          gh release upload "$tag" out/* --clobber

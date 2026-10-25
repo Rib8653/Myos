@@ -2,9 +2,17 @@
 # these onto the target disk from the ISO, so installing works offline.
 # UEFI boot loader (kept separate from the BIOS list: they conflict).
 grub-efi
-grub-efi-amd64
-grub-efi-amd64-signed
 shim-signed
 cryptsetup
 cryptsetup-initramfs
 keyutils
+
+#if ARCHITECTURE amd64
+grub-efi-amd64
+grub-efi-amd64-signed
+#endif
+
+#if ARCHITECTURE arm64
+grub-efi-arm64
+grub-efi-arm64-signed
+#endif

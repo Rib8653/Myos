@@ -5,11 +5,32 @@
 # regenerated from this script on every build and are git-ignored).
 set -e
 
+# Target architecture: amd64 (default, Intel/AMD PCs) or arm64 (e.g. Apple
+# Silicon Macs in UTM, Arm laptops/servers). Set by build.sh --arch.
+ARCH="${RIBOS_ARCH:-amd64}"
+case "${ARCH}" in
+	amd64) BOOTLOADERS="grub-efi,syslinux" ;;   # UEFI + legacy BIOS
+	arm64) BOOTLOADERS="grub-efi" ;;            # Arm machines are UEFI-only
+	*) echo "Unsupported RIBOS_ARCH: ${ARCH} (use amd64 or arm64)" >&2; exit 1 ;;
+esac
+
+# Building for another architecture than the host's (e.g. arm64 on a PC)
+# runs the target's programs through QEMU user-mode emulation. Slow, but works.
+HOST_ARCH="$(dpkg --print-architecture)"
+CROSS=""
+if [ "${ARCH}" != "${HOST_ARCH}" ]; then
+	case "${ARCH}" in
+		arm64) QEMU=qemu-aarch64-static ;;
+		amd64) QEMU=qemu-x86_64-static ;;
+	esac
+	CROSS="--bootstrap-qemu-arch ${ARCH} --bootstrap-qemu-static /usr/bin/${QEMU}"
+fi
+
 lb config noauto \
 	--mode debian \
 	--distribution trixie \
-	--architectures amd64 \
-	--linux-flavours amd64 \
+	--architectures "${ARCH}" \
+	--linux-flavours "${ARCH}" \
 	--archive-areas "main contrib non-free non-free-firmware" \
 	\
 	`# HTTPS mirrors (work through HTTPS-only proxies too)` \
@@ -21,9 +42,9 @@ lb config noauto \
 	--security true \
 	--updates true \
 	\
-	`# Hybrid ISO: boots from DVD or USB, on UEFI (GRUB) and legacy BIOS (isolinux)` \
+	`# Hybrid ISO: boots from DVD or USB; UEFI via GRUB, legacy BIOS via isolinux (amd64)` \
 	--binary-images iso-hybrid \
-	--bootloaders "grub-efi,syslinux" \
+	--bootloaders "${BOOTLOADERS}" \
 	--debian-installer none \
 	\
 	`# Firmware: installed from config/package-lists/firmware.list.chroot instead` \
@@ -38,4 +59,5 @@ lb config noauto \
 	--bootappend-live "boot=live components quiet splash username=ribos user-fullname=RibOS hostname=ribos locales=en_US.UTF-8 keyboard-layouts=us" \
 	--apt-recommends true \
 	--cache true \
+	${CROSS} \
 	"${@}"
