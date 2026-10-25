@@ -1,0 +1,96 @@
+# Build the RibOS ISO on GitHub's Linux runners and publish it as a Release.
+#
+# Run it: Actions tab -> "Build RibOS ISO" -> "Run workflow".
+# Pushing a tag like v1.0 also builds and publishes a release with that name.
+#
+# The ISO (~2.7 GB) is bigger than GitHub's 2 GB per-file limit for release
+# assets, so it's uploaded in two parts plus a SHA-256 checksum. The release
+# notes explain how to join them.
+name: Build RibOS ISO
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-iso
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        # The build needs ~20 GB; the runner image ships with large SDKs we don't use.
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache /usr/local/share/boost /usr/share/swift /usr/local/share/powershell
+          sudo docker image prune --all --force > /dev/null || true
+          df -h /
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y squashfs-tools xorriso isolinux syslinux-common \
+            grub-pc-bin grub-efi-amd64-bin mtools dosfstools apt-utils rsync distro-info
+          ./ci/install-live-build.sh
+
+      - name: Build ISO
+        run: sudo ./build.sh
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          retention-days: 7
+
+      - name: Split ISO for upload
+        run: |
+          mkdir out
+          sudo chown "$USER" ribos-amd64.hybrid.iso
+          sha256sum ribos-amd64.hybrid.iso > out/ribos-amd64.hybrid.iso.sha256
+          split -b 1900M -d -a 1 ribos-amd64.hybrid.iso out/ribos-amd64.hybrid.iso.part
+          ls -lh out
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = tag ]; then
+            tag="${GITHUB_REF_NAME}"; extra=""
+          else
+            tag="build-$(date -u +%Y%m%d)-${GITHUB_RUN_NUMBER}"; extra="--prerelease"
+          fi
+          cat > notes.md <<NOTES
+          RibOS ISO built from ${GITHUB_SHA::7}.
+
+          The ISO is split into parts because of GitHub's 2 GB file limit.
+          Download all \`.part\` files and the \`.sha256\` file into one folder, then join them:
+
+          **macOS / Linux** (Terminal):
+          \`\`\`
+          cat ribos-amd64.hybrid.iso.part* > ribos-amd64.hybrid.iso
+          shasum -a 256 -c ribos-amd64.hybrid.iso.sha256
+          \`\`\`
+
+          **Windows** (Command Prompt):
+          \`\`\`
+          copy /b ribos-amd64.hybrid.iso.part0 + ribos-amd64.hybrid.iso.part1 ribos-amd64.hybrid.iso
+          certutil -hashfile ribos-amd64.hybrid.iso SHA256
+          \`\`\`
+          (compare the result with the number in the \`.sha256\` file)
+
+          Then write the ISO to a USB stick (balenaEtcher, Ventoy, Rufus) or boot it in a VM.
+          NOTES
+          gh release create "$tag" out/* --target "${GITHUB_SHA}" \
+            --title "RibOS ${tag}" --notes-file notes.md $extra

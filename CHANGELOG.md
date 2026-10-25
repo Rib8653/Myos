@@ -89,3 +89,12 @@
   unpack, GRUB from the ISO pool, package cleanup, initramfs).
 - Slideshow images now scale to fit above their captions (the first layout
   pushed the captions off-screen).
+
+## GitHub Actions build
+- `.github/workflows/build-iso.yml`: builds the ISO on an Ubuntu runner
+  (manual "Run workflow" or a `v*` tag) and publishes it as a GitHub Release,
+  split into parts under 2 GB plus a SHA-256 file, with joining instructions
+  for macOS, Linux and Windows. Uploads `build.log` if the build fails.
+- `ci/install-live-build.sh`: installs Debian trixie's current live-build,
+  debootstrap and archive keyring on Ubuntu hosts (Ubuntu's live-build is
+  too old).

@@ -39,6 +39,24 @@ in `build.log`. A first build downloads about 2.5 GB of packages and takes
 > `wget https://deb.debian.org/debian/pool/main/l/live-build/live-build_20250505+deb13u1_all.deb && sudo apt install ./live-build_*.deb`
 > and do the same for `debootstrap` and `debian-archive-keyring` if they are older than trixie.
 
+### Building on GitHub (no Linux machine needed)
+
+`.github/workflows/build-iso.yml` builds the ISO on GitHub's Linux runners,
+for example from a Mac:
+
+1. On GitHub, open the repository's **Actions** tab, pick
+   **Build RibOS ISO**, then **Run workflow**. Pushing a tag such as `v1.0`
+   also starts a build.
+2. Wait about an hour. In a private repository this uses roughly 60 of the
+   free plan's 2,000 Actions minutes per month.
+3. Open **Releases** (right-hand side of the repository page). Each build
+   publishes the ISO in parts (GitHub's limit is 2 GB per file) plus a
+   checksum file. Download them all and join them as the release notes
+   show, e.g. on a Mac: `cat ribos-amd64.hybrid.iso.part* > ribos-amd64.hybrid.iso`.
+
+If a build fails, the run page has a `build-log` download with the full log.
+Old releases can be deleted from the Releases page.
+
 Behind a proxy? Export `https_proxy` before running `build.sh`. It is passed
 into the build chroot through `config/environment.chroot`, which is generated
 on every build, git-ignored and never copied into the ISO. All mirrors use
