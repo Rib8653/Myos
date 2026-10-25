@@ -1,0 +1,9 @@
+# Copied into the ISO's package pool (not the live system). Calamares installs
+# these onto the target disk from the ISO, so installing works offline.
+# UEFI boot loader (kept separate from the BIOS list: they conflict).
+grub-efi-amd64
+grub-efi-amd64-signed
+shim-signed
+cryptsetup
+cryptsetup-initramfs
+keyutils

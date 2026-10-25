@@ -1,0 +1,21 @@
+#!/bin/sh
+# RibOS: writes the installed system's APT sources (deb822 format), with all
+# archive areas enabled so firmware and drivers keep receiving updates.
+# Replaces the calamares-settings-debian helper of the same name.
+
+CHROOT=$(mount | grep proc | grep calamares | awk '{print $3}' | sed -e "s#/proc##g")
+RELEASE="trixie"
+
+rm -f $CHROOT/etc/apt/sources.list
+cat << EOF > $CHROOT/etc/apt/sources.list.d/debian.sources
+Types: deb
+URIs: https://deb.debian.org/debian
+Suites: $RELEASE $RELEASE-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: https://security.debian.org/debian-security
+Suites: $RELEASE-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg

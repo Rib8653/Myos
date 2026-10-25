@@ -32,7 +32,7 @@ start.writeConfig("favorites", [
 start.writeConfig("favoritesDisplay", 0);          // pinned apps as a grid
 start.writeConfig("applicationsDisplay", 1);       // "All apps" as a list
 start.writeConfig("showActionButtonCaptions", true);
-start.writeConfig("primaryActions", 1);            // power buttons (sleep/restart/shut down) at the bottom
+start.writeConfig("primaryActions", 0);            // footer shows power buttons (sleep/restart/shut down)
 
 var tasks = panel.addWidget("org.kde.plasma.icontasks");
 tasks.currentConfigGroup = ["General"];
@@ -54,7 +54,7 @@ panel.addWidget("org.kde.plasma.systemtray");
 var clock = panel.addWidget("org.kde.plasma.digitalclock");
 clock.currentConfigGroup = ["Appearance"];
 clock.writeConfig("showDate", true);
-clock.writeConfig("dateDisplayFormat", "BelowTime");
+clock.writeConfig("dateDisplayFormat", 2);         // 2 = date below the time
 clock.writeConfig("dateFormat", "shortDate");
 
 panel.addWidget("org.kde.plasma.showdesktop");     // thin "peek" button at the far right

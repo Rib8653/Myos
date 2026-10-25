@@ -1,0 +1,7 @@
+#!/bin/sh
+# Enable Flathub system-wide so Discover can install Flatpak apps.
+# The .flatpakrepo file (URL + Flathub's public signing key) ships in the
+# image; flatpak downloads the app catalogue on first use.
+set -e
+flatpak remote-add --system --if-not-exists flathub /usr/share/ribos/flathub.flatpakrepo
+flatpak remotes --system

@@ -7,10 +7,10 @@
 _launch=Meta+E
 
 [services][org.kde.plasma-systemmonitor.desktop]
-_launch=Ctrl+Shift+Esc\tCtrl+Esc
+_launch=Ctrl+Shift+Esc\tMeta+Esc
 
 [services][org.kde.spectacle.desktop]
-_launch=Print
+_launch=Print\tMeta+Shift+S
 
 [services][systemsettings.desktop]
 _launch=Meta+I
