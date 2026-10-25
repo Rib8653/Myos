@@ -53,7 +53,9 @@ if [ -w /dev/kvm ]; then
 	ARGS+=(-enable-kvm -cpu host)
 else
 	echo "warning: /dev/kvm not available, booting without acceleration (slow)" >&2
-	ARGS+=(-cpu max)
+	# No AVX: Mesa's software renderer crashed plasmashell under QEMU's
+	# emulated AVX ("-cpu max") in testing; an SSE4.2-era CPU model is stable.
+	ARGS+=(-cpu Nehalem -accel tcg,thread=multi)
 fi
 
 if [ "$MODE" = uefi ]; then

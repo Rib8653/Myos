@@ -1,5 +1,6 @@
 // RibOS dark mode toggle: a panel button that runs `ribos-theme toggle`.
 import QtQuick
+import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasma5support as P5Support
@@ -23,6 +24,10 @@ PlasmoidItem {
     }
 
     compactRepresentation: MouseArea {
+        // A panel gives compact items no width unless they ask for one.
+        Layout.minimumWidth: Kirigami.Units.iconSizes.small
+        Layout.preferredWidth: height
+        Layout.minimumHeight: Kirigami.Units.iconSizes.small
         hoverEnabled: true
         onClicked: runner.connectSource("ribos-theme toggle")
 

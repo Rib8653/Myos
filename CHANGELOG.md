@@ -23,3 +23,29 @@
 - Checked every package name against the trixie archive before building.
 - Verified: ISO (2.6 GB) boots under UEFI in QEMU straight into a Plasma
   session for the live user.
+
+## Stage 3: Windows-style desktop defaults
+- RibOS global theme (`org.ribos.desktop`, plus a dark variant) whose layout
+  script builds one full-width bottom panel: centered start button + pinned
+  apps (two expanding spacers), dark-mode toggle, system tray, clock with
+  date below, "show desktop" sliver at the far right. Non-floating.
+- Start menu (Kickoff) with the RibOS logo, search, pinned-apps grid and
+  power buttons. Pins are set in `/usr/share/ribos/set-start-menu-pins`
+  (Kickoff copies its built-in defaults before a layout script can change
+  them, so the default itself is edited at build time and after apt runs).
+- `/etc/xdg`: Breeze light, accent colour, Inter UI font, double-click to
+  open, minimize/maximize/close on the right, double-click title to
+  maximize, snap to edges and corners, Alt+Tab thumbnail grid, Firefox as
+  default browser.
+- `/etc/skel`: Recycle Bin and Home desktop icons, Windows-style shortcuts
+  (Super, Super+E/D/L/I, Super+arrows, Ctrl+Shift+Esc, Print,
+  Super+Shift+S, Ctrl+Alt+T).
+- Dark-mode toggle: `ribos-theme` script, panel button and menu entry;
+  the RibOS wallpaper has a dark variant that switches automatically.
+- Original wallpaper, start button and logo rendered from `branding/src`.
+- Tested in QEMU: layout, desktop icons, start menu, Ctrl+Shift+Esc,
+  Super+E and the light/dark switch work. Fixed afterwards: start-menu pins
+  (were Kickoff's defaults), zero-width dark-mode button, Konqueror being
+  picked as the browser.
+- `test.sh`: without KVM, emulate a CPU without AVX. With QEMU's emulated
+  AVX, Mesa's software renderer crashed plasmashell.

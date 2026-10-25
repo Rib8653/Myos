@@ -16,19 +16,7 @@ panel.addWidget("org.kde.plasma.panelspacer");
 var start = panel.addWidget("org.kde.plasma.kickoff");
 start.currentConfigGroup = ["General"];
 start.writeConfig("icon", "ribos-start");
-// Pinned apps in the start menu (first login only; users can re-pin).
-start.writeConfig("favorites", [
-    "preferred://browser",
-    "org.kde.dolphin.desktop",
-    "libreoffice-writer.desktop",
-    "libreoffice-calc.desktop",
-    "vlc.desktop",
-    "org.kde.gwenview.desktop",
-    "org.kde.kate.desktop",
-    "org.kde.discover.desktop",
-    "systemsettings.desktop",
-    "ribos-dark-mode.desktop"
-]);
+// Pinned start menu apps are set in /usr/share/ribos/set-start-menu-pins.
 start.writeConfig("favoritesDisplay", 0);          // pinned apps as a grid
 start.writeConfig("applicationsDisplay", 1);       // "All apps" as a list
 start.writeConfig("showActionButtonCaptions", true);
