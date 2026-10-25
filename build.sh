@@ -31,7 +31,9 @@ rm -f ribos-amd64.hybrid.iso
 # If the host reaches the internet through a proxy, pass it into the build
 # chroot (apt only). This file is host-specific, git-ignored and never ends
 # up in the ISO.
-: > config/environment.chroot
+# Only create it when there is something to write: live-build reads it with
+# grep, and an empty file makes grep (and so the build) fail.
+rm -f config/environment.chroot
 for var in http_proxy https_proxy no_proxy; do
 	if [ -n "${!var:-}" ]; then
 		echo "${var}=${!var}" >> config/environment.chroot
