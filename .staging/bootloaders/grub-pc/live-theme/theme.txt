@@ -1,0 +1,47 @@
+# RibOS GRUB theme. Only the Unifont bitmap font is available on the ISO.
+desktop-image: "../splash.png"
+desktop-image-scale-method: "stretch"
+title-text: ""
+message-font: "Unifont Regular 16"
+terminal-font: "Unifont Regular 16"
+
++ boot_menu {
+	left = 25%
+	width = 50%
+	top = 50%
+	height = 40%
+	item_color = "#C7D2FE"
+	selected_item_color = "#FFFFFF"
+	item_font = "Unifont Regular 16"
+	selected_item_font = "Unifont Regular 16"
+	item_height = 24
+	item_padding = 8
+	item_spacing = 6
+	icon_width = 0
+	icon_height = 0
+	item_icon_space = 0
+	selected_item_pixmap_style = "select_*.png"
+}
+
++ progress_bar {
+	id = "__timeout__"
+	left = 25%
+	top = 100%-56
+	width = 50%
+	height = 4
+	fg_color = "#22D3EE"
+	bg_color = "#33335A"
+	border_color = "#33335A"
+	text = ""
+}
+
++ label {
+	top = 100%-36
+	left = 0
+	width = 100%
+	height = 20
+	align = "center"
+	color = "#8B93C9"
+	font = "Unifont Regular 16"
+	text = "Arrow keys to choose, Enter to boot, E to edit"
+}

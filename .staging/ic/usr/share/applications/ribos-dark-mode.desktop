@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Dark Mode
+GenericName=Switch light/dark theme
+Comment=Switch the desktop between light and dark mode
+Exec=ribos-theme toggle
+Icon=weather-clear-night
+Categories=Settings;DesktopSettings;
+Keywords=dark;light;theme;night;colors;
+NoDisplay=false

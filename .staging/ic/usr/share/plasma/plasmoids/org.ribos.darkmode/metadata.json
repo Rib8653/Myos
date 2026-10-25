@@ -1,0 +1,14 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [ { "Name": "RibOS project" } ],
+        "Category": "System Information",
+        "Description": "Switch between light and dark mode with one click",
+        "Icon": "weather-clear-night",
+        "Id": "org.ribos.darkmode",
+        "License": "GPL-2.0-or-later",
+        "Name": "Dark Mode Toggle",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

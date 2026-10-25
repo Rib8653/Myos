@@ -1,0 +1,4 @@
+# Login splash screen.
+[KSplash]
+Engine=KSplashQML
+Theme=org.kde.breeze.desktop

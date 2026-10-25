@@ -1,0 +1,48 @@
+# KDE Plasma desktop (Wayland by default, X11 session available as fallback)
+kde-plasma-desktop
+sddm
+sddm-theme-breeze
+kwin-x11
+xserver-xorg
+xdg-desktop-portal-kde
+xdg-user-dirs
+plasma-nm
+plasma-pa
+plasma-systemmonitor
+powerdevil
+kscreen
+kde-config-sddm
+kde-config-gtk-style
+breeze-gtk-theme
+kinfocenter
+kwalletmanager
+partitionmanager
+
+# Fonts: Inter for the UI, Noto for wide script coverage, emoji
+fonts-inter
+fonts-noto-core
+fonts-noto-mono
+fonts-noto-color-emoji
+fonts-noto-cjk
+
+# Sound (PipeWire)
+pipewire-audio
+wireplumber
+
+# Bluetooth
+bluez
+bluedevil
+
+# Printing (CUPS) and scanning
+cups
+cups-browsed
+printer-driver-gutenprint
+hplip
+ipp-usb
+print-manager
+sane-airscan
+skanlite
+
+# Boot splash
+plymouth
+plymouth-themes

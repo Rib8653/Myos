@@ -1,0 +1,19 @@
+# Default applications
+firefox-esr
+libreoffice
+libreoffice-kf6
+libreoffice-plasma
+vlc
+dolphin
+konsole
+kate
+ark
+gwenview
+okular
+kcalc
+kde-spectacle
+
+# App store: Discover with Flatpak + Flathub (remote added by a hook)
+plasma-discover
+plasma-discover-backend-flatpak
+flatpak

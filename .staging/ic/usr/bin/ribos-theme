@@ -1,0 +1,19 @@
+#!/bin/sh
+# ribos-theme: switch the desktop between light and dark mode.
+#   ribos-theme toggle | light | dark | status
+# Changes the colour scheme only; panels, the Breeze Plasma style, GTK apps
+# and the RibOS wallpaper (which has a dark variant) follow automatically.
+set -e
+
+current="$(kreadconfig6 --file kdeglobals --group General --key ColorScheme)"
+[ -n "$current" ] || current=BreezeLight
+
+case "${1:-toggle}" in
+	light)  target=BreezeLight ;;
+	dark)   target=BreezeDark ;;
+	toggle) if [ "$current" = BreezeDark ]; then target=BreezeLight; else target=BreezeDark; fi ;;
+	status) [ "$current" = BreezeDark ] && echo dark || echo light; exit 0 ;;
+	*) echo "usage: ribos-theme toggle|light|dark|status" >&2; exit 1 ;;
+esac
+
+[ "$target" = "$current" ] || plasma-apply-colorscheme "$target"

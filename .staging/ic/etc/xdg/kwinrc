@@ -1,0 +1,28 @@
+# RibOS window manager defaults.
+[Windows]
+# Double-click a title bar to maximize / restore.
+TitlebarDoubleClickCommand=Maximize
+# Drag a window to the top edge to maximize, to a side for half screen,
+# to a corner for a quarter (KWin "quick tiling" = Windows Snap).
+ElectricBorderMaximize=true
+ElectricBorderTiling=true
+ElectricBorderCornerRatio=0.25
+FocusPolicy=ClickToFocus
+
+[org.kde.kdecoration2]
+library=org.kde.breeze
+theme=Breeze
+# App menu/icon on the left; minimize, maximize, close on the right.
+ButtonsOnLeft=M
+ButtonsOnRight=IAX
+
+[ModifierOnlyShortcuts]
+# Tapping the Super (Windows) key opens the start menu.
+Meta=org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu
+
+[TabBox]
+# Alt+Tab shows a grid of window thumbnails.
+LayoutName=thumbnail_grid
+
+[NightColor]
+Active=false

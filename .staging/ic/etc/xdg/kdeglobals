@@ -1,0 +1,20 @@
+# RibOS system-wide KDE defaults (users' own ~/.config/kdeglobals overrides this).
+[General]
+ColorScheme=BreezeLight
+AccentColor=79,107,237
+font=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+menuFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=Inter,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=Inter,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+fixed=Noto Sans Mono,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+[KDE]
+# Global theme providing the Windows-style panel layout (see
+# /usr/share/plasma/look-and-feel/org.ribos.desktop).
+LookAndFeelPackage=org.ribos.desktop
+widgetStyle=Breeze
+# Double-click to open files and folders, like Windows.
+SingleClick=false
+
+[Icons]
+Theme=breeze

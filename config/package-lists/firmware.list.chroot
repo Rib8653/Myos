@@ -1,0 +1,18 @@
+# Common hardware firmware (non-free-firmware / contrib).
+firmware-linux
+firmware-linux-nonfree
+firmware-misc-nonfree
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+firmware-brcm80211
+firmware-intel-sound
+firmware-sof-signed
+amd64-microcode
+intel-microcode
+firmware-amd-graphics
+firmware-mediatek
+firmware-libertas
+firmware-ti-connectivity
+firmware-zd1211
+bluez-firmware

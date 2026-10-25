@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=RibOS
+Description=RibOS boot splash: logo with an animated progress bar
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/ribos
+ScriptFile=/usr/share/plymouth/themes/ribos/ribos.script

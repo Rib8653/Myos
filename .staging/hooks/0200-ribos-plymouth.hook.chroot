@@ -1,0 +1,5 @@
+#!/bin/sh
+# Make the RibOS boot splash the default and rebuild the initramfs with it.
+set -e
+plymouth-set-default-theme ribos
+update-initramfs -u -k all

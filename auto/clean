@@ -1,0 +1,7 @@
+#!/bin/sh
+# Run by `lb clean`; also removes generated config files and logs.
+set -e
+lb clean noauto "${@}"
+rm -f config/binary config/bootstrap config/chroot config/common config/source
+rm -f config/environment.chroot
+rm -f build.log

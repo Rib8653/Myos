@@ -1,0 +1,8 @@
+# Dolphin (file manager): Explorer-like defaults.
+[General]
+ShowFullPath=false
+RememberOpenedTabs=false
+[MainWindow]
+MenuBar=Disabled
+[PlacesPanel]
+IconSize=22

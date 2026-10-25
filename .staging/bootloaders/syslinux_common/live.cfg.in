@@ -1,0 +1,18 @@
+label live-@FLAVOUR@
+	menu label ^Try or install RibOS
+	menu default
+	linux @LINUX@
+	initrd @INITRD@
+	append @APPEND_LIVE@
+
+label live-@FLAVOUR@-nomodeset
+	menu label Try or install RibOS (^safe graphics)
+	linux @LINUX@
+	initrd @INITRD@
+	append @APPEND_LIVE@ nomodeset
+
+label live-@FLAVOUR@-failsafe
+	menu label Try or install RibOS (^fail-safe mode)
+	linux @LINUX@
+	initrd @INITRD@
+	append @APPEND_LIVE_FAILSAFE@

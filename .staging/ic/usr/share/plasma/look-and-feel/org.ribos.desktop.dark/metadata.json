@@ -1,0 +1,13 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [ { "Name": "RibOS project" } ],
+        "Category": "",
+        "Description": "RibOS dark theme with a centered bottom taskbar",
+        "Id": "org.ribos.desktop.dark",
+        "License": "GPL-2.0-or-later",
+        "Name": "RibOS Dark",
+        "Version": "1.0"
+    },
+    "X-Plasma-APIVersion": "2"
+}

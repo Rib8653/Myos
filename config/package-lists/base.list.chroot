@@ -1,0 +1,16 @@
+# Core live system: kernel and live-boot are added by live-build itself.
+live-boot
+live-config
+live-config-systemd
+systemd-sysv
+sudo
+locales
+console-setup
+keyboard-configuration
+ca-certificates
+curl
+wget
+nano
+less
+bash-completion
+network-manager

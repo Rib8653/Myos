@@ -1,0 +1,41 @@
+#!/bin/sh
+# RibOS live-build configuration.
+# This script is run by `lb config`. Edit the options here rather than the
+# generated files under config/ (config/common, config/binary, ... are
+# regenerated from this script on every build and are git-ignored).
+set -e
+
+lb config noauto \
+	--mode debian \
+	--distribution trixie \
+	--architectures amd64 \
+	--linux-flavours amd64 \
+	--archive-areas "main contrib non-free non-free-firmware" \
+	\
+	`# HTTPS mirrors (work through HTTPS-only proxies too)` \
+	--mirror-bootstrap "https://deb.debian.org/debian/" \
+	--mirror-chroot "https://deb.debian.org/debian/" \
+	--mirror-chroot-security "https://security.debian.org/debian-security/" \
+	--mirror-binary "https://deb.debian.org/debian/" \
+	--mirror-binary-security "https://security.debian.org/debian-security/" \
+	--security true \
+	--updates true \
+	\
+	`# Hybrid ISO: boots from DVD or USB, on UEFI (GRUB) and legacy BIOS (isolinux)` \
+	--binary-images iso-hybrid \
+	--bootloaders "grub-efi,syslinux" \
+	--debian-installer none \
+	\
+	`# Firmware: installed from config/package-lists/firmware.list.chroot instead` \
+	--firmware-chroot false \
+	--firmware-binary false \
+	\
+	--iso-application "RibOS" \
+	--iso-publisher "RibOS project" \
+	--iso-volume "RibOS" \
+	--image-name "ribos" \
+	\
+	--bootappend-live "boot=live components quiet splash username=ribos user-fullname=RibOS hostname=ribos locales=en_US.UTF-8 keyboard-layouts=us" \
+	--apt-recommends true \
+	--cache true \
+	"${@}"
