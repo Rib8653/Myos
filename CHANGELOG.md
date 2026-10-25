@@ -69,3 +69,23 @@
   suspend, since the live password isn't obvious.
 - Dark-mode button rewritten after it didn't show on the panel; it now
   follows the structure of Plasma's own "Show Desktop" button.
+
+## Stage 5: Calamares installer
+- `installer.list.chroot`: Calamares with Debian's `calamares-settings-debian`
+  (its module sequence and helpers), plus `efibootmgr`.
+- RibOS overrides: `branding: ribos` in `settings.conf`, branding
+  (`branding.desc`, logo, welcome image, 4-slide slideshow), "Install
+  RibOS" launcher (auto-copied to the live desktop), `packages.conf` also
+  removes Calamares from the installed system, and `calamares-sources-final`
+  writes deb822 sources with contrib/non-free/non-free-firmware over HTTPS.
+- `installer-efi.list.binary` / `installer-bios.list.binary`: GRUB (UEFI,
+  signed shim, and BIOS) plus cryptsetup go into a package pool on the ISO,
+  so installing works offline. Two lists, because grub-pc and grub-efi
+  conflict.
+- `build.sh` now also checks for `apt-ftparchive` (apt-utils), which
+  live-build needs to index that pool.
+- Verified in QEMU (UEFI): the live desktop shows the RibOS installer, and
+  an "Erase disk" install to a blank 32 GB disk ran all 41 jobs (partition,
+  unpack, GRUB from the ISO pool, package cleanup, initramfs).
+- Slideshow images now scale to fit above their captions (the first layout
+  pushed the captions off-screen).

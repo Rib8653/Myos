@@ -12,10 +12,10 @@ if [ "$(id -u)" -ne 0 ]; then
 	exec sudo -E "$0" "$@"
 fi
 
-for tool in lb debootstrap mksquashfs xorriso; do
+for tool in lb debootstrap mksquashfs xorriso apt-ftparchive; do
 	command -v "$tool" >/dev/null || {
 		echo "Missing '$tool'. Install with:" >&2
-		echo "  sudo apt install live-build debootstrap squashfs-tools xorriso isolinux syslinux-common grub-pc-bin grub-efi-amd64-bin mtools dosfstools" >&2
+		echo "  sudo apt install live-build debootstrap squashfs-tools xorriso isolinux syslinux-common grub-pc-bin grub-efi-amd64-bin mtools dosfstools apt-utils" >&2
 		exit 1
 	}
 done

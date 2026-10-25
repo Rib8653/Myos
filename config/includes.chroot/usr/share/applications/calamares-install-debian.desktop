@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Install RibOS
+GenericName=Install to hard disk
+Comment=Install RibOS on this computer
+Exec=calamares-install-debian
+Keywords=calamares;system;install;installer;ribos
+Icon=ribos-logo
+Terminal=false
+Categories=Qt;System;
+StartupWMClass=calamares
+StartupNotify=true

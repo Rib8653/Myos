@@ -22,16 +22,16 @@ root/sudo, ~25 GB free disk space and an internet connection.
 
 ```bash
 sudo apt install live-build debootstrap squashfs-tools xorriso isolinux \
-    syslinux-common grub-pc-bin grub-efi-amd64-bin mtools dosfstools \
+    syslinux-common grub-pc-bin grub-efi-amd64-bin mtools dosfstools apt-utils \
     qemu-system-x86 ovmf          # the last two only for test.sh
 
 sudo ./build.sh                   # clean build (reuses the package cache)
 sudo ./build.sh --purge           # clean build, re-downloading everything
 ```
 
-The result is `ribos-amd64.hybrid.iso` (about 3.5 GB), and the full log is
+The result is `ribos-amd64.hybrid.iso` (about 2.7 GB), and the full log is
 in `build.log`. A first build downloads about 2.5 GB of packages and takes
-30–60 minutes. Later builds reuse `cache/` and are faster.
+30–60 minutes. Later builds reuse `cache/` and take about 25 minutes.
 
 > **Ubuntu hosts:** Ubuntu ships an old, patched live-build. If `lb --version`
 > prints something older than `20230502`, install Debian's package instead
@@ -98,8 +98,8 @@ config/
     apps.list.chroot             Firefox, LibreOffice, VLC, Discover + Flatpak…
     installer.list.chroot        Calamares
     installer-*.list.binary      GRUB packages put on the ISO for offline installs
-  hooks/normal/01xx-ribos-*      scripts run inside the image at build time
-                                 (os-release branding, Plymouth, Flathub)
+  hooks/normal/0xxx-ribos-*      scripts run inside the image at build time
+                                 (start menu pins, os-release, Plymouth, Flathub)
   bootloaders/                   boot menu: grub-pc/ (UEFI) and isolinux/ +
                                  syslinux_common/ (BIOS), splash images
   includes.chroot/               files copied as-is into the system:
@@ -113,6 +113,10 @@ config/
     usr/share/plasma/plasmoids/org.ribos.darkmode/
                                    the light/dark toggle button on the taskbar
     usr/bin/ribos-theme            light/dark switch used by the toggle
+    usr/share/ribos/set-start-menu-pins
+                                   the apps pinned in the start menu
+    usr/lib/live/config/2000-ribos-live-session
+                                   live ISO only: no auto screen lock/suspend
     usr/share/wallpapers/RibOS/    wallpaper (light + dark variants)
     usr/share/plymouth/themes/ribos/  boot splash
     etc/calamares/                 installer branding, slideshow, settings
@@ -142,7 +146,9 @@ Debian trixie (main, contrib, non-free or non-free-firmware). Check with
 
 ### Changing desktop defaults
 
-* **Taskbar and start menu layout, pinned apps, clock, wallpaper:**
+* **Start menu pinned apps:** the `PINS=` line in
+  `config/includes.chroot/usr/share/ribos/set-start-menu-pins`.
+* **Taskbar and start menu layout, taskbar apps, clock, wallpaper:**
   `config/includes.chroot/usr/share/plasma/look-and-feel/org.ribos.desktop/contents/layouts/org.kde.plasma.desktop-layout.js`
   (Plasma's [desktop scripting API](https://develop.kde.org/docs/plasma/scripting/)).
   It runs once, on a user's first login.

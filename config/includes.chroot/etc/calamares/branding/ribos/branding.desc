@@ -1,0 +1,41 @@
+# RibOS installer branding (Calamares). Images are rendered from
+# branding/src by branding/render.sh.
+---
+componentName:   ribos
+
+welcomeStyleCalamares: false
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 960px,640px
+windowPlacement: center
+
+strings:
+    productName:         RibOS
+    shortProductName:    RibOS
+    version:             1.0
+    shortVersion:        1.0
+    versionedName:       RibOS 1.0
+    shortVersionedName:  RibOS 1.0
+    bootloaderEntryName: RibOS
+    productUrl:          https://github.com/rib8653/myos
+    supportUrl:          https://github.com/rib8653/myos/issues
+    knownIssuesUrl:      https://github.com/rib8653/myos/issues
+    releaseNotesUrl:     https://github.com/rib8653/myos/blob/main/CHANGELOG.md
+    donateUrl:           https://github.com/rib8653/myos
+
+sidebar: widget
+navigation: widget
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "logo.png"
+    productWelcome:      "welcome.png"
+
+slideshow:               "show.qml"
+slideshowAPI:            2
+
+style:
+   SidebarBackground:        "#0B1024"
+   SidebarText:              "#C7D2FE"
+   SidebarTextCurrent:       "#FFFFFF"
+   SidebarBackgroundCurrent: "#4F6BED"
