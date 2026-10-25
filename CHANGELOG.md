@@ -98,3 +98,6 @@
 - `ci/install-live-build.sh`: installs Debian trixie's current live-build,
   debootstrap and archive keyring on Ubuntu hosts (Ubuntu's live-build is
   too old).
+- Fixed `build.sh` writing an empty `config/environment.chroot` on hosts
+  without a proxy; live-build's grep of that file aborted the first
+  GitHub build. The second run built and published the ISO in ~33 minutes.
