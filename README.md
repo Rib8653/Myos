@@ -1,6 +1,6 @@
 # RibOS
 
-A Debian 13 ("trixie") based live and installable Linux distribution with a
+Note this was made with aI! ribOS is a Debian 13 ("trixie") based live and installable Linux distribution with a
 KDE Plasma desktop preconfigured to feel familiar to Windows 11 users:
 a centered bottom taskbar, a Windows 11 style start menu (search, pinned apps,
 recommended files, all apps, user and power buttons), Fluent-style icons,
