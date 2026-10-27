@@ -18,4 +18,5 @@ widgetStyle=Breeze
 SingleClick=false
 
 [Icons]
-Theme=breeze
+# Windows 11 style icons (Fluent, built by build.sh); Breeze fills any gaps.
+Theme=Fluent-light

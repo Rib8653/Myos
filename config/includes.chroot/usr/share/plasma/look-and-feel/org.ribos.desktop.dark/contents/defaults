@@ -6,7 +6,7 @@ widgetStyle=Breeze
 ColorScheme=BreezeDark
 
 [kdeglobals][Icons]
-Theme=breeze
+Theme=Fluent-dark
 
 [plasmarc][Theme]
 name=default

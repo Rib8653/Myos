@@ -1,2 +1,0 @@
-// Re-apply RibOS's default start menu pins if a Plasma update reset them.
-DPkg::Post-Invoke { "if [ -x /usr/share/ribos/set-start-menu-pins ]; then /usr/share/ribos/set-start-menu-pins || true; fi"; };

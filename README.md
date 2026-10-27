@@ -2,8 +2,9 @@
 
 A Debian 13 ("trixie") based live and installable Linux distribution with a
 KDE Plasma desktop preconfigured to feel familiar to Windows 11 users:
-a centered bottom taskbar, a start menu with search, pinned apps and power
-buttons, window snapping, Windows-style shortcuts and a light/dark toggle.
+a centered bottom taskbar, a Windows 11 style start menu (search, pinned apps,
+recommended files, all apps, user and power buttons), Fluent-style icons,
+window snapping, Windows-style shortcuts and a light/dark toggle.
 
 It is built with Debian's official [`live-build`](https://live-team.pages.debian.net/live-manual/)
 and produces a hybrid ISO that boots from DVD or USB, runs as a live system and
@@ -13,8 +14,11 @@ installs to disk with the Calamares graphical installer. Two architectures:
 * **arm64**: Arm machines with UEFI, such as Apple Silicon Macs in UTM or
   Parallels, and Arm laptops/servers.
 
-All artwork is original (see `branding/src`). RibOS mimics a familiar layout
-and behaviour only: it contains no Microsoft logos, fonts, wallpapers or icons.
+RibOS's own artwork is original (see `branding/src`). The icons come from the
+freely licensed [Fluent icon theme](https://github.com/vinceliuice/Fluent-icon-theme)
+(GPL-3.0), with any Windows/Microsoft logos it contains removed at build time.
+RibOS mimics a familiar layout and behaviour only: it contains no Microsoft
+logos, fonts, wallpapers or icons.
 
 ---
 
@@ -134,6 +138,9 @@ auto/config                    lb config options: distribution, archive areas,
 build.sh / test.sh             build from scratch / boot in QEMU
 branding/src/*.svg             ORIGINAL ARTWORK (logo, wallpaper, boot, slides)
 branding/render.sh             renders the SVGs into the PNGs under config/
+branding/install-fluent-icons.sh
+                               builds the Fluent-light/Fluent-dark icon themes
+                               (build.sh fetches Fluent at a pinned commit)
 config/
   package-lists/               what gets installed (one package per line)
     base.list.chroot             live system core
@@ -143,7 +150,7 @@ config/
     installer.list.chroot        Calamares
     installer-*.list.binary      GRUB packages put on the ISO for offline installs
   hooks/normal/0xxx-ribos-*      scripts run inside the image at build time
-                                 (start menu pins, os-release, Plymouth, Flathub)
+                                 (os-release, Plymouth, Flathub)
   bootloaders/                   boot menu: grub-pc/ (UEFI) and isolinux/ +
                                  syslinux_common/ (BIOS), splash images
   includes.chroot/               files copied as-is into the system:
@@ -154,11 +161,11 @@ config/
     usr/share/plasma/look-and-feel/org.ribos.desktop/
                                    the RibOS global theme, including the
                                    taskbar/start menu layout script
+    usr/share/plasma/plasmoids/org.ribos.startmenu/
+                                   the Windows 11 style start menu (QML)
     usr/share/plasma/plasmoids/org.ribos.darkmode/
                                    the light/dark toggle button on the taskbar
     usr/bin/ribos-theme            light/dark switch used by the toggle
-    usr/share/ribos/set-start-menu-pins
-                                   the apps pinned in the start menu
     usr/lib/live/config/2000-ribos-live-session
                                    live ISO only: no auto screen lock/suspend
     usr/share/wallpapers/RibOS/    wallpaper (light + dark variants)
@@ -190,8 +197,17 @@ Debian trixie (main, contrib, non-free or non-free-firmware). Check with
 
 ### Changing desktop defaults
 
-* **Start menu pinned apps:** the `PINS=` line in
-  `config/includes.chroot/usr/share/ribos/set-start-menu-pins`.
+* **Start menu pinned apps (first login):** the `favorites` default in
+  `config/includes.chroot/usr/share/plasma/plasmoids/org.ribos.startmenu/contents/config/main.xml`.
+  Users pin and unpin apps by right-clicking them in the menu.
+* **Start menu look:** `.../org.ribos.startmenu/contents/ui/FullRepresentation.qml`
+  (sizes and the number of columns are at the top).
+* **Icons:** `build.sh` fetches the Fluent icon theme and
+  `branding/install-fluent-icons.sh` builds `Fluent-light` (default) and
+  `Fluent-dark` (used in dark mode), with yellow folders. To use another icon
+  theme, change `[Icons] Theme=` in `kdeglobals` and the global themes'
+  `contents/defaults`. LibreOffice uses its Colibre icons
+  (`config/includes.chroot/usr/lib/libreoffice/share/registry/ribos.xcd`).
 * **Taskbar and start menu layout, taskbar apps, clock, wallpaper:**
   `config/includes.chroot/usr/share/plasma/look-and-feel/org.ribos.desktop/contents/layouts/org.kde.plasma.desktop-layout.js`
   (Plasma's [desktop scripting API](https://develop.kde.org/docs/plasma/scripting/)).
@@ -228,5 +244,7 @@ system and log in as a new user.
 ## Licence
 
 Build scripts and configuration: GPL-2.0-or-later. Original artwork in
-`branding/src` (logo, wallpapers, boot splash, slides): CC0. Bundled
-software keeps its own Debian licences.
+`branding/src` (logo, wallpapers, boot splash, slides): CC0. The icon themes
+built from the [Fluent icon theme](https://github.com/vinceliuice/Fluent-icon-theme)
+by Vince Liuice are GPL-3.0 (with recoloured folders and trademark logos
+removed). Bundled software keeps its own Debian licences.

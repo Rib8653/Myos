@@ -1,5 +1,0 @@
-#!/bin/sh
-# Apply RibOS's default start menu pins (see /usr/share/ribos/set-start-menu-pins).
-set -e
-/usr/share/ribos/set-start-menu-pins
-grep -A3 '<entry name="favorites"' /usr/share/plasma/plasmoids/org.kde.plasma.kickoff/contents/config/main.xml | grep default

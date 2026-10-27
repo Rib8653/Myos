@@ -1,6 +1,6 @@
 // RibOS default Plasma layout: runs once for every new user on first login.
 //
-//   [            [start][pinned / running apps]            ][tray][clock][|]
+//   [            [start][pinned / running apps]            ][dark][tray][clock][|]
 //
 // One full-width bottom panel. Two expanding spacers keep the start button
 // and the task icons centered; tray, clock and "show desktop" sit on the right.
@@ -13,14 +13,10 @@ panel.hiding = "none";
 
 panel.addWidget("org.kde.plasma.panelspacer");
 
-var start = panel.addWidget("org.kde.plasma.kickoff");
-start.currentConfigGroup = ["General"];
-start.writeConfig("icon", "ribos-start");
-// Pinned start menu apps are set in /usr/share/ribos/set-start-menu-pins.
-start.writeConfig("favoritesDisplay", 0);          // pinned apps as a grid
-start.writeConfig("applicationsDisplay", 1);       // "All apps" as a list
-start.writeConfig("showActionButtonCaptions", true);
-start.writeConfig("primaryActions", 0);            // footer shows power buttons (sleep/restart/shut down)
+// RibOS start menu (Windows 11 style: search, pinned apps, recommended files,
+// all apps, user and power). Its default pins are in the widget's
+// contents/config/main.xml under /usr/share/plasma/plasmoids/org.ribos.startmenu.
+var start = panel.addWidget("org.ribos.startmenu");
 
 var tasks = panel.addWidget("org.kde.plasma.icontasks");
 tasks.currentConfigGroup = ["General"];

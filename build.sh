@@ -31,10 +31,10 @@ case "$ARCH" in
 esac
 export RIBOS_ARCH="$ARCH"   # read by auto/config
 
-for tool in lb debootstrap mksquashfs xorriso apt-ftparchive; do
+for tool in lb debootstrap mksquashfs xorriso apt-ftparchive git; do
 	command -v "$tool" >/dev/null || {
 		echo "Missing '$tool'. Install with:" >&2
-		echo "  sudo apt install live-build debootstrap squashfs-tools xorriso mtools dosfstools apt-utils" >&2
+		echo "  sudo apt install live-build debootstrap squashfs-tools xorriso mtools dosfstools apt-utils git" >&2
 		echo "  (plus isolinux syslinux-common grub-pc-bin grub-efi-amd64-bin for amd64 builds)" >&2
 		exit 1
 	}
@@ -61,6 +61,21 @@ else
 	lb clean
 fi
 rm -f "ribos-$ARCH.hybrid.iso"
+
+# Windows 11 style icons: the Fluent icon theme (GPL-3.0) isn't packaged in
+# Debian, so fetch a pinned commit (kept in cache/) and build RibOS's
+# Fluent-light / Fluent-dark themes from it (generated, git-ignored).
+FLUENT_COMMIT=c8a244f571ef8fb47812bdc9dbce76546cedce69
+FLUENT_SRC=cache/third-party/fluent-icon-theme
+if [ "$(git -C "$FLUENT_SRC" rev-parse HEAD 2>/dev/null)" != "$FLUENT_COMMIT" ]; then
+	echo "Fetching the Fluent icon theme..."
+	rm -rf "$FLUENT_SRC"
+	mkdir -p "$FLUENT_SRC"
+	git -C "$FLUENT_SRC" init -q
+	git -C "$FLUENT_SRC" fetch -q --depth 1 https://github.com/vinceliuice/Fluent-icon-theme "$FLUENT_COMMIT"
+	git -C "$FLUENT_SRC" checkout -q FETCH_HEAD
+fi
+branding/install-fluent-icons.sh "$FLUENT_SRC" config/includes.chroot/usr/share/icons
 
 # If the host reaches the internet through a proxy, pass it into the build
 # chroot (apt only). This file is host-specific, git-ignored and never ends

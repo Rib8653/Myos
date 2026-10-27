@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RibOS start menu settings. "favorites" is only the first-login default;
+     after that, pins live in KDE's activity database (pin/unpin from the menu). -->
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name=""/>
+  <group name="General">
+    <entry name="icon" type="String">
+      <default>ribos-start</default>
+    </entry>
+    <entry name="favorites" type="StringList">
+      <default>preferred://browser,org.kde.dolphin.desktop,libreoffice-writer.desktop,libreoffice-calc.desktop,libreoffice-impress.desktop,org.kde.kate.desktop,vlc.desktop,org.kde.gwenview.desktop,org.kde.okular.desktop,org.kde.discover.desktop,systemsettings.desktop,org.kde.konsole.desktop,org.kde.kcalc.desktop,org.kde.spectacle.desktop,org.kde.ark.desktop,org.kde.plasma-systemmonitor.desktop,ribos-dark-mode.desktop</default>
+    </entry>
+    <entry name="favoritesPortedToKAstats" type="Bool">
+      <default>false</default>
+    </entry>
+  </group>
+</kcfg>

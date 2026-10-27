@@ -1,0 +1,15 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [ { "Name": "RibOS project" } ],
+        "Category": "Application Launchers",
+        "Description": "Start menu with search, pinned apps, recommended files and power options",
+        "Icon": "ribos-start",
+        "Id": "org.ribos.startmenu",
+        "License": "GPL-2.0-or-later",
+        "Name": "RibOS Start Menu",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-Provides": [ "org.kde.plasma.launchermenu" ]
+}

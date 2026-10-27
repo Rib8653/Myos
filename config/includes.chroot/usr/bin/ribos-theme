@@ -1,8 +1,9 @@
 #!/bin/sh
 # ribos-theme: switch the desktop between light and dark mode.
 #   ribos-theme toggle | light | dark | status
-# Changes the colour scheme only; panels, the Breeze Plasma style, GTK apps
-# and the RibOS wallpaper (which has a dark variant) follow automatically.
+# Changes the colour scheme and the matching Fluent icon variant; panels, the
+# Breeze Plasma style, GTK apps and the RibOS wallpaper (which has a dark
+# variant) follow automatically.
 set -e
 
 current="$(kreadconfig6 --file kdeglobals --group General --key ColorScheme)"
@@ -17,3 +18,18 @@ case "${1:-toggle}" in
 esac
 
 [ "$target" = "$current" ] || plasma-apply-colorscheme "$target"
+
+# Matching icons (dark panel icons on light panels and vice versa), unless the
+# user picked a different icon theme.
+icons="$(kreadconfig6 --file kdeglobals --group Icons --key Theme)"
+case "$icons" in
+	Fluent-light|Fluent-dark|"")
+		want=Fluent-light
+		[ "$target" = BreezeDark ] && want=Fluent-dark
+		if [ "$icons" != "$want" ]; then
+			for changeicons in /usr/lib/*/libexec/plasma-changeicons /usr/libexec/plasma-changeicons; do
+				[ -x "$changeicons" ] && { "$changeicons" "$want"; break; }
+			done
+		fi
+		;;
+esac

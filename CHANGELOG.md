@@ -118,3 +118,25 @@
   natively on `ubuntu-24.04-arm`, and both ISOs go into one release.
 - README: arm64 build notes and a UTM-on-Mac guide; corrected the live
   password (it's `live`).
+
+## Windows 11 style start menu and icons
+- New start menu widget `org.ribos.startmenu` (QML, built on the same KDE
+  models as Kickoff) replacing Kickoff on the taskbar: search box on top
+  ("Search for apps, settings and documents"), a 6-column **Pinned** grid,
+  **All apps** A–Z list, **Recommended** recent files, and a footer with the
+  user's avatar/name (opens account settings) and a power flyout (Lock, Sign
+  out, Sleep, Restart, Shut down). Type anywhere to search, Enter opens the
+  best match, Esc goes back/closes, right-click to pin/unpin. The Super key
+  still opens it.
+- Default pins now live in the widget's own config (`main.xml`), so the
+  Kickoff workaround (build hook + apt hook editing Kickoff's defaults) is
+  gone.
+- Icons: the Fluent icon theme (GPL-3.0, Windows 11 "Fluent" style), fetched
+  by `build.sh` at a pinned commit and built by
+  `branding/install-fluent-icons.sh` into `Fluent-light` (default) and
+  `Fluent-dark`, with yellow folders. The dark-mode toggle switches between
+  them. Fluent's Windows logo (`start-here`) and Microsoft product logos are
+  removed at build time.
+- LibreOffice defaults to its Colibre icon style.
+- Tested the start menu (pinned grid, All apps, search, power flyout, light
+  and dark icons) by running it on a virtual X display inside the build chroot.
