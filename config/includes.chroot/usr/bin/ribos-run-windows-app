@@ -1,0 +1,29 @@
+#!/bin/sh
+# Open a Windows program (.exe), installer (.msi) or shortcut (.lnk) with Wine.
+# RibOS makes this the default for those files, so double-clicking them works.
+#   ribos-run-windows-app <file>
+set -u
+file="${1:?usage: ribos-run-windows-app <file.exe|file.msi|file.lnk>}"
+name="$(basename "$file")"
+
+if ! command -v wine >/dev/null 2>&1; then
+	kdialog --title "Windows program" --sorry \
+"“$name” is a Windows program.
+
+This edition of RibOS is for Arm processors, and Windows programs made for
+Intel/AMD PCs can't run on it. Look for a Linux version of the app in Discover,
+or use the amd64 edition of RibOS on an Intel/AMD PC."
+	exit 1
+fi
+
+# The first Windows program takes a minute while Wine sets up its "C: drive"
+# in ~/.wine; say so, so nobody double-clicks five times.
+if [ ! -d "${WINEPREFIX:-$HOME/.wine}" ]; then
+	kdialog --title "Windows program" --passivepopup \
+		"Starting “$name”… The first Windows program takes a minute to set up." 15 &
+fi
+
+case "$file" in
+	*.[mM][sS][iI]) exec wine msiexec /i "$file" ;;
+	*)              exec wine start /unix "$file" ;;
+esac

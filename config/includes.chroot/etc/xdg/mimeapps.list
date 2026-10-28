@@ -6,3 +6,11 @@ text/html=firefox-esr.desktop
 application/xhtml+xml=firefox-esr.desktop
 application/pdf=org.kde.okular.desktop
 text/plain=org.kde.kate.desktop
+# Windows programs, installers and shortcuts open with Wine (double-click to run).
+application/vnd.microsoft.portable-executable=ribos-run-windows-app.desktop
+application/x-msdownload=ribos-run-windows-app.desktop
+application/x-ms-dos-executable=ribos-run-windows-app.desktop
+application/x-dosexec=ribos-run-windows-app.desktop
+application/x-ms-ne-executable=ribos-run-windows-app.desktop
+application/x-msi=ribos-run-windows-app.desktop
+application/x-ms-shortcut=ribos-run-windows-app.desktop

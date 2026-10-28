@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Windows Program (Wine)
+GenericName=Run Windows programs
+Comment=Run Windows programs and installers with Wine
+Exec=ribos-run-windows-app %f
+Icon=wine
+Terminal=false
+NoDisplay=true
+Categories=System;Emulator;
+MimeType=application/vnd.microsoft.portable-executable;application/x-msdownload;application/x-ms-dos-executable;application/x-dosexec;application/x-ms-ne-executable;application/x-msi;application/x-ms-shortcut;

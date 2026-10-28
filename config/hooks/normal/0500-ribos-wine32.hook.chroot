@@ -1,0 +1,11 @@
+#!/bin/sh
+# 32-bit Windows programs (most installers are 32-bit) need Wine's 32-bit
+# half, which Debian ships in its i386 architecture. Enable i386 packages and
+# install it (amd64 only; Arm can't run Intel/AMD Windows programs anyway).
+set -e
+[ "$(dpkg --print-architecture)" = amd64 ] || exit 0
+dpkg --add-architecture i386
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends wine32:i386 libwine:i386
+apt-get clean
+wine --version

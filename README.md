@@ -14,6 +14,11 @@ installs to disk with the Calamares graphical installer. Two architectures:
 * **arm64**: Arm machines with UEFI, such as Apple Silicon Macs in UTM or
   Parallels, and Arm laptops/servers.
 
+Windows programs (`.exe`) run with the preinstalled Wine on **amd64**: just
+double-click them. Wine runs many, but not all, Windows apps; check
+<https://appdb.winehq.org>. The **arm64** edition can't run Intel/AMD Windows
+programs and says so when you open one.
+
 RibOS's own artwork is original (see `branding/src`). The icons come from the
 freely licensed [Fluent icon theme](https://github.com/vinceliuice/Fluent-icon-theme)
 (GPL-3.0), with any Windows/Microsoft logos it contains removed at build time.
@@ -221,6 +226,11 @@ Debian trixie (main, contrib, non-free or non-free-firmware). Check with
   (plus `etc/sddm.conf.d/10-ribos.conf` for the login screen). The default is
   Fluent's white cursor set, built by `branding/install-fluent-icons.sh`.
 * **Firefox defaults (smooth scrolling):** `config/includes.chroot/etc/firefox-esr/ribos.js`
+* **Windows programs:** double-clicking a `.exe`, `.msi` or `.lnk` runs it with
+  Wine through `config/includes.chroot/usr/bin/ribos-run-windows-app`
+  (association in `etc/xdg/mimeapps.list`; packages in
+  `config/package-lists/wine.list.chroot`; 32-bit Wine is added by
+  `config/hooks/normal/0500-ribos-wine32.hook.chroot`).
 * **Window snapping, title-bar buttons, Alt+Tab style:** `config/includes.chroot/etc/xdg/kwinrc`
 * **Keyboard shortcuts:** `config/includes.chroot/etc/skel/.config/kglobalshortcutsrc`
 * **Desktop icons:** `config/includes.chroot/etc/skel/Desktop/`

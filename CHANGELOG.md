@@ -155,3 +155,15 @@
   acceleration stays at libinput's "adaptive" default, which behaves like
   Windows' "Enhance pointer precision".
 - Start button icon is now drawn at the same size as the taskbar's app icons.
+
+## Windows programs with Wine
+- amd64: Wine 10 preinstalled (64-bit `wine64` plus 32-bit `wine32:i386`, which
+  most installers need; a hook enables Debian's i386 architecture), with
+  `fonts-wine` and `winetricks`.
+- Double-clicking a `.exe`, `.msi` or `.lnk` runs it: `/usr/bin/ribos-run-windows-app`
+  is the default app for all Windows executable MIME types (`wine start`, or
+  `msiexec /i` for installers) and shows a "first start takes a minute" notice
+  while Wine sets up `~/.wine`. Installed Windows apps appear in the start menu.
+- arm64: Debian's Wine there can only run Windows-on-Arm programs, so it isn't
+  installed; opening a `.exe` explains that Intel/AMD Windows programs can't
+  run on the Arm edition.
