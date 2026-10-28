@@ -1,0 +1,6 @@
+# RibOS file-opening defaults.
+[Executable scripts]
+# Double-clicking a Windows program (.exe/.msi) runs it with Wine straight away
+# instead of asking "Execute or Cancel?". (This also applies to scripts that
+# were explicitly marked executable; other scripts still open in the editor.)
+behaviourOnLaunch=execute

@@ -16,11 +16,13 @@ or use the amd64 edition of RibOS on an Intel/AMD PC."
 	exit 1
 fi
 
-# The first Windows program takes a minute while Wine sets up its "C: drive"
-# in ~/.wine; say so, so nobody double-clicks five times.
-if [ ! -d "${WINEPREFIX:-$HOME/.wine}" ]; then
+# The first Windows program takes a while: Wine sets up its "C: drive" in
+# ~/.wine. Say so, and finish that setup before starting the program; on slow
+# machines starting both at once can make the program time out.
+if [ ! -f "${WINEPREFIX:-$HOME/.wine}/system.reg" ]; then
 	kdialog --title "Windows program" --passivepopup \
-		"Starting “$name”… The first Windows program takes a minute to set up." 15 &
+		"Setting up Windows support for “$name”… This happens once and can take a minute." 30 &
+	wine wineboot --init
 fi
 
 case "$file" in

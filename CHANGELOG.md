@@ -167,3 +167,10 @@
 - arm64: Debian's Wine there can only run Windows-on-Arm programs, so it isn't
   installed; opening a `.exe` explains that Intel/AMD Windows programs can't
   run on the Arm edition.
+- Tested in QEMU: double-clicking a 64-bit (Notepad) and a 32-bit
+  (Minesweeper) Windows program opens them. Fixes from that test: KDE asked
+  "Execute or Cancel?" for every .exe, so `/etc/xdg/kiorc` sets
+  `behaviourOnLaunch=execute` (runs them via their associated app straight
+  away); and the launcher now finishes Wine's one-time setup
+  (`wineboot --init`) before starting the program, because on a slow machine
+  starting both at once made the first program time out.
