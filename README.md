@@ -101,7 +101,11 @@ Without it, QEMU emulates the CPU and the desktop is very slow.
 
 1. Install [UTM](https://mac.getutm.app/), then **Create a New Virtual Machine** → **Virtualize** → **Linux**.
 2. Tick nothing special; under *Boot ISO Image* pick `ribos-arm64.hybrid.iso`.
-3. Give it 4 GB+ RAM, 2+ CPU cores and a 32 GB+ disk. Finish and start it.
+3. Give it 4 GB+ RAM, 2+ CPU cores and a 32 GB+ disk. Before starting, open
+   the VM's settings → **Display** and pick **virtio-gpu-gl-pci (GPU Supported)**
+   with **Retina Mode** off: graphics acceleration is what makes the desktop
+   and mouse pointer move smoothly. Then start it. (RibOS includes the SPICE
+   guest agent, so the window can be resized and the clipboard is shared.)
 4. After installing, open the VM's settings, remove the ISO from the CD drive
    (or clear it in the toolbar's drive menu) and restart.
 
@@ -213,6 +217,10 @@ Debian trixie (main, contrib, non-free or non-free-firmware). Check with
   (Plasma's [desktop scripting API](https://develop.kde.org/docs/plasma/scripting/)).
   It runs once, on a user's first login.
 * **Colours, fonts, icon theme, double-click:** `config/includes.chroot/etc/xdg/kdeglobals`
+* **Mouse cursor and its size:** `config/includes.chroot/etc/xdg/kcminputrc`
+  (plus `etc/sddm.conf.d/10-ribos.conf` for the login screen). The default is
+  Fluent's white cursor set, built by `branding/install-fluent-icons.sh`.
+* **Firefox defaults (smooth scrolling):** `config/includes.chroot/etc/firefox-esr/ribos.js`
 * **Window snapping, title-bar buttons, Alt+Tab style:** `config/includes.chroot/etc/xdg/kwinrc`
 * **Keyboard shortcuts:** `config/includes.chroot/etc/skel/.config/kglobalshortcutsrc`
 * **Desktop icons:** `config/includes.chroot/etc/skel/Desktop/`

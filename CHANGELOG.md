@@ -140,3 +140,18 @@
 - LibreOffice defaults to its Colibre icon style.
 - Tested the start menu (pinned grid, All apps, search, power flyout, light
   and dark icons) by running it on a virtual X display inside the build chroot.
+
+## Windows-style mouse cursor and smoother pointer
+- Cursor: Fluent's white cursor set (white arrow with a dark outline, blue
+  spinning busy ring, like Windows 11), installed as `Fluent-white-cursors` by
+  `branding/install-fluent-icons.sh`, size 30 (Windows uses 32). Set for
+  Plasma (`/etc/xdg/kcminputrc`, both global themes), the login screen
+  (`/etc/sddm.conf.d/10-ribos.conf`, which also pins the Breeze SDDM theme)
+  and X11/GTK apps (Debian's `x-cursor-theme` alternative, set by a hook).
+- Smoothness: Firefox uses momentum ("msd physics") smooth scrolling like on
+  Windows; `spice-vdagent` and `qemu-guest-agent` added so the pointer,
+  clipboard and screen size work smoothly in UTM/QEMU/Proxmox; README tells
+  UTM users to pick the accelerated `virtio-gpu-gl-pci` display. Pointer
+  acceleration stays at libinput's "adaptive" default, which behaves like
+  Windows' "Enhance pointer precision".
+- Start button icon is now drawn at the same size as the taskbar's app icons.

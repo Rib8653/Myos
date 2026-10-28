@@ -1,0 +1,5 @@
+# RibOS mouse defaults (users' own ~/.config/kcminputrc overrides this).
+[Mouse]
+# White Windows-style cursor (Fluent, built by build.sh), 30 px like Windows' 32.
+cursorTheme=Fluent-white-cursors
+cursorSize=30

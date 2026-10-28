@@ -100,4 +100,14 @@ find "$LIGHT" "$DARK" -regextype posix-extended -iregex ".*/(${TRADEMARK_RE})\.(
 # or at icons removed above.
 find "$LIGHT" "$DARK" -xtype l -delete
 
-echo "Installed $(find "$LIGHT" "$DARK" -name '*.svg' | wc -l) icons into $DEST (Fluent-light, Fluent-dark)."
+# --- Cursors: Fluent's white set (white arrow, dark outline, blue busy ring),
+# the Windows look. Upstream calls it "Fluent-dark" (made for dark themes);
+# RibOS installs it as Fluent-white-cursors and uses it in light and dark mode.
+CURSORS="$DEST/Fluent-white-cursors"
+rm -rf "$CURSORS"
+cp -r "$SRC/cursors/dist-dark" "$CURSORS"
+printf '[Icon Theme]\nName=Fluent White\nComment=White Fluent cursors\nInherits=breeze_cursors\n' > "$CURSORS/index.theme"
+# For Debian's x-cursor-theme alternative (default cursor of X11/GTK apps and SDDM).
+printf '[Icon Theme]\nInherits=Fluent-white-cursors\n' > "$CURSORS/cursor.theme"
+
+echo "Installed $(find "$LIGHT" "$DARK" -name '*.svg' | wc -l) icons into $DEST (Fluent-light, Fluent-dark) and Fluent-white-cursors."

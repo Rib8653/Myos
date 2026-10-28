@@ -12,7 +12,7 @@ Theme=Fluent-light
 name=default
 
 [kcminputrc][Mouse]
-cursorTheme=breeze_cursors
+cursorTheme=Fluent-white-cursors
 
 [kwinrc][WindowSwitcher]
 LayoutName=thumbnail_grid

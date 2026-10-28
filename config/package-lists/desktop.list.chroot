@@ -18,6 +18,11 @@ kinfocenter
 kwalletmanager
 partitionmanager
 
+# Virtual machines (UTM, QEMU, Proxmox): smooth pointer, clipboard and
+# automatic resolution with SPICE; both do nothing on real hardware.
+spice-vdagent
+qemu-guest-agent
+
 # Fonts: Inter for the UI, Noto for wide script coverage, emoji
 fonts-inter
 fonts-noto-core

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Make the RibOS cursor (Fluent-white-cursors, built by build.sh) the system
+# default for X11/GTK apps and anything not configured through Plasma.
+set -e
+THEME=/usr/share/icons/Fluent-white-cursors/cursor.theme
+[ -f "$THEME" ] || { echo "Fluent-white-cursors missing" >&2; exit 1; }
+update-alternatives --install /usr/share/icons/default/index.theme x-cursor-theme "$THEME" 100
+update-alternatives --set x-cursor-theme "$THEME"
