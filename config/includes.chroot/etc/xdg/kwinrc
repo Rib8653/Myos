@@ -26,3 +26,8 @@ LayoutName=thumbnail_grid
 
 [NightColor]
 Active=false
+
+[Wayland]
+# On-screen keyboard (shown when you tap a text field without a keyboard),
+# for touch screens such as handheld gaming PCs.
+InputMethod[$e]=/usr/share/applications/com.github.maliit.keyboard.desktop

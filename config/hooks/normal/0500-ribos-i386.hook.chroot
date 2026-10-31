@@ -1,0 +1,14 @@
+#!/bin/sh
+# 32-bit (i386) packages for amd64: Wine's 32-bit half (most Windows installers
+# are 32-bit) and Steam, which is a 32-bit program and needs 32-bit graphics
+# drivers. Debian ships these in its i386 architecture, so enable it here.
+set -e
+[ "$(dpkg --print-architecture)" = amd64 ] || exit 0
+dpkg --add-architecture i386
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+	wine32:i386 libwine:i386 \
+	steam-installer libgl1-mesa-dri:i386 mesa-vulkan-drivers:i386 libgl1:i386
+apt-get clean
+wine --version
+dpkg -l steam-installer | tail -1

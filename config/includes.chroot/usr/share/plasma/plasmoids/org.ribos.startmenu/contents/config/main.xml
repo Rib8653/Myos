@@ -10,7 +10,7 @@
       <default>ribos-start</default>
     </entry>
     <entry name="favorites" type="StringList">
-      <default>preferred://browser,org.kde.dolphin.desktop,libreoffice-writer.desktop,libreoffice-calc.desktop,libreoffice-impress.desktop,org.kde.kate.desktop,vlc.desktop,org.kde.gwenview.desktop,org.kde.okular.desktop,org.kde.discover.desktop,systemsettings.desktop,org.kde.konsole.desktop,org.kde.kcalc.desktop,org.kde.spectacle.desktop,org.kde.ark.desktop,org.kde.plasma-systemmonitor.desktop,ribos-dark-mode.desktop</default>
+      <default>preferred://browser,org.kde.dolphin.desktop,libreoffice-writer.desktop,libreoffice-calc.desktop,libreoffice-impress.desktop,org.kde.kate.desktop,vlc.desktop,org.kde.gwenview.desktop,org.kde.okular.desktop,org.kde.discover.desktop,systemsettings.desktop,org.kde.konsole.desktop,org.kde.kcalc.desktop,org.kde.spectacle.desktop,org.kde.ark.desktop,org.kde.plasma-systemmonitor.desktop,steam.desktop,ribos-gaming-mode.desktop,ribos-dark-mode.desktop</default>
     </entry>
     <entry name="favoritesPortedToKAstats" type="Bool">
       <default>false</default>

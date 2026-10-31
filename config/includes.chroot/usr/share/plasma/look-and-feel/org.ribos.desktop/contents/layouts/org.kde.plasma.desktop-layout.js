@@ -20,12 +20,16 @@ var start = panel.addWidget("org.ribos.startmenu");
 
 var tasks = panel.addWidget("org.kde.plasma.icontasks");
 tasks.currentConfigGroup = ["General"];
-tasks.writeConfig("launchers", [
+var launchers = [
     "applications:firefox-esr.desktop",
     "applications:org.kde.dolphin.desktop",
     "applications:libreoffice-startcenter.desktop",
     "applications:org.kde.discover.desktop"
-]);
+];
+if (applicationExists("steam.desktop")) {         // amd64 editions only
+    launchers.push("applications:steam.desktop");
+}
+tasks.writeConfig("launchers", launchers);
 tasks.writeConfig("fill", false);                  // shrink to content so it can be centered
 tasks.writeConfig("iconSpacing", 2);
 tasks.writeConfig("maxStripes", 1);

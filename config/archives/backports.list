@@ -1,0 +1,4 @@
+# Debian's official backports: newer kernel, graphics drivers (Mesa) and
+# firmware for recent hardware such as AMD Ryzen Z2 handhelds (ROG Xbox Ally).
+# Only the packages pinned in backports.pref come from here.
+deb https://deb.debian.org/debian/ trixie-backports main contrib non-free non-free-firmware

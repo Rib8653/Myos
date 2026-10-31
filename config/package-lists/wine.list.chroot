@@ -3,7 +3,7 @@ kdialog
 
 #if ARCHITECTURE amd64
 # 64-bit Wine; the 32-bit half (wine32:i386, needed by most installers) is
-# added by hooks/normal/0500-ribos-wine32.hook.chroot.
+# added by hooks/normal/0500-ribos-i386.hook.chroot.
 wine
 wine64
 libwine

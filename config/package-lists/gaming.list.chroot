@@ -1,0 +1,21 @@
+# Gaming and handheld PCs (ROG Xbox Ally, Steam Deck-class devices).
+# Kernel, firmware and Mesa come from trixie-backports (config/archives).
+
+# On-screen keyboard for touch screens (shown when typing without a keyboard)
+maliit-keyboard
+# Performance / Balanced / Power saver switch in the battery applet
+power-profiles-daemon
+
+#if ARCHITECTURE amd64
+# Vulkan drivers (Proton/DXVK need them) and Valve's game compositor
+mesa-vulkan-drivers
+gamescope
+# Steam (the 32-bit parts are added by hooks/normal/0500-ribos-i386.hook.chroot)
+steam-devices
+# Game performance: CPU governor boost while playing, FPS/temperature overlay
+gamemode
+mangohud
+goverlay
+# Lutris: one place for GOG, Epic, Ubisoft and other non-Steam games
+lutris
+#endif

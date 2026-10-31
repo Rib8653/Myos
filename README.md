@@ -14,6 +14,12 @@ installs to disk with the Calamares graphical installer. Two architectures:
 * **arm64**: Arm machines with UEFI, such as Apple Silicon Macs in UTM or
   Parallels, and Arm laptops/servers.
 
+**Gaming (amd64):** Steam (with Proton for Windows games), Lutris, GameMode,
+MangoHud and gamescope are preinstalled, with a newer kernel, AMD graphics
+drivers (Mesa) and firmware from Debian backports for recent hardware such as
+the **ROG Xbox Ally**. Open **Gaming Mode** from the start menu for a
+full-screen, controller-friendly Steam. See *Gaming and handhelds* below.
+
 Windows programs (`.exe`) run with the preinstalled Wine on **amd64**: just
 double-click them. Wine runs many, but not all, Windows apps; check
 <https://appdb.winehq.org>. The **arm64** edition can't run Intel/AMD Windows
@@ -126,6 +132,28 @@ and runs it very slowly.
 4. Settings → Storage → attach `ribos-amd64.hybrid.iso` to the optical drive.
 5. Start. After installing, remove the ISO from the drive and reboot.
 
+### Gaming and handhelds (ROG Xbox Ally and similar)
+
+1. Write the **amd64** ISO to a USB stick (balenaEtcher/Rufus/Ventoy).
+2. Boot from the stick. On ASUS handhelds, holding **Volume Down** while
+   pressing **Power** opens the BIOS / boot menu; pick the USB stick there.
+   RibOS supports Secure Boot, so it can stay on.
+3. Try it live, then **Install RibOS** from the desktop.
+4. Open **Steam** (or **Gaming Mode** for the console-style interface), sign in,
+   and in Steam → Settings → Compatibility turn on *Steam Play for all titles*
+   so Windows games run with Proton.
+
+Tips:
+* The battery icon in the taskbar switches between **Power saver**, **Balanced**
+  and **Performance** (higher clocks and fan for demanding games).
+* Show FPS/temperatures: in a game's Steam properties set launch options to
+  `mangohud gamemoderun %command%`.
+* Tap a text field on the touch screen to get the on-screen keyboard.
+* What isn't covered: the Ally's extra buttons (back paddles, Command Center /
+  Armoury button) and TDP limits need handheld tools such as Handheld Daemon,
+  which Debian doesn't package; the main controls work as a standard Xbox-style
+  controller.
+
 ### Real hardware
 
 Write the ISO to a USB stick (this erases the stick):
@@ -226,11 +254,13 @@ Debian trixie (main, contrib, non-free or non-free-firmware). Check with
   (plus `etc/sddm.conf.d/10-ribos.conf` for the login screen). The default is
   Fluent's white cursor set, built by `branding/install-fluent-icons.sh`.
 * **Firefox defaults (smooth scrolling):** `config/includes.chroot/etc/firefox-esr/ribos.js`
+* **Gaming packages:** `config/package-lists/gaming.list.chroot`; which
+  packages come from backports: `config/archives/backports.pref`.
 * **Windows programs:** double-clicking a `.exe`, `.msi` or `.lnk` runs it with
   Wine through `config/includes.chroot/usr/bin/ribos-run-windows-app`
   (association in `etc/xdg/mimeapps.list`; packages in
   `config/package-lists/wine.list.chroot`; 32-bit Wine is added by
-  `config/hooks/normal/0500-ribos-wine32.hook.chroot`).
+  `config/hooks/normal/0500-ribos-i386.hook.chroot`).
 * **Window snapping, title-bar buttons, Alt+Tab style:** `config/includes.chroot/etc/xdg/kwinrc`
 * **Keyboard shortcuts:** `config/includes.chroot/etc/skel/.config/kglobalshortcutsrc`
 * **Desktop icons:** `config/includes.chroot/etc/skel/Desktop/`

@@ -174,3 +174,22 @@
   away); and the launcher now finishes Wine's one-time setup
   (`wineboot --init`) before starting the program, because on a slow machine
   starting both at once made the first program time out.
+
+## Gaming and handheld support (ROG Xbox Ally)
+- Debian **trixie-backports** enabled (`config/archives/backports.list`) with
+  pins (`backports.pref`) for the kernel (7.2), firmware (2026-09) and the
+  Mesa 26.1 graphics/Vulkan stack + gamescope, for 64-bit and 32-bit (`:i386`
+  pins are needed, apt otherwise only pins native packages). Everything else
+  stays on Debian stable. Installed systems keep backports in their sources so
+  these keep updating.
+- amd64: Steam (`steam-installer`, 32-bit parts in the renamed
+  `0500-ribos-i386` hook together with Wine), Vulkan drivers, gamescope,
+  GameMode, MangoHud + GOverlay, Lutris, `steam-devices` controller rules.
+- **Gaming Mode** launcher (Steam Big Picture, `steam -gamepadui`) pinned in the
+  start menu; Steam added to the taskbar when installed (`applicationExists`).
+- Touch: Maliit on-screen keyboard enabled in KWin; `power-profiles-daemon` for
+  the Power saver / Balanced / Performance switch.
+- README: "Gaming and handhelds" section (Ally boot keys, Proton, MangoHud,
+  what isn't covered: extra buttons and TDP need Handheld Daemon, not in Debian).
+- Verified the backports + i386 package set resolves (apt simulation); not
+  tested on real Ally hardware.

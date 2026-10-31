@@ -1,0 +1,18 @@
+# Take these from trixie-backports (everything else stays on Debian stable):
+# the kernel, firmware, and the Mesa graphics/Vulkan stack + gamescope, so new
+# AMD GPUs/APUs (e.g. Ryzen Z2 in the ROG Xbox Ally) are fully supported.
+# Used during the build and kept in the installed system so updates follow.
+
+Package: linux-image-* linux-headers-* linux-kbuild-* linux-base firmware-* amd64-microcode intel-microcode
+Pin: release n=trixie-backports
+Pin-Priority: 990
+
+Package: *mesa* libgl1* libglx* libegl* libgbm* libdrm* libllvm* libclc* libvulkan* libwayland* spirv-* libspirv* gamescope
+Pin: release n=trixie-backports
+Pin-Priority: 990
+
+# Same for the 32-bit copies used by Steam and Wine (apt matches only the
+# native architecture unless the :i386 suffix is given).
+Package: *mesa*:i386 libgl1*:i386 libglx*:i386 libegl*:i386 libgbm*:i386 libdrm*:i386 libllvm*:i386 libclc*:i386 libvulkan*:i386 libwayland*:i386 libspirv*:i386
+Pin: release n=trixie-backports
+Pin-Priority: 990

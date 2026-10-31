@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Gaming Mode
+GenericName=Steam Big Picture
+Comment=Full-screen, controller-friendly Steam (like a console)
+Exec=steam -gamepadui
+TryExec=steam
+Icon=input-gaming
+Terminal=false
+Categories=Game;
+Keywords=steam;games;big picture;controller;handheld;
