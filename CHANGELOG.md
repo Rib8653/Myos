@@ -193,3 +193,7 @@
   what isn't covered: extra buttons and TDP need Handheld Daemon, not in Debian).
 - Verified the backports + i386 package set resolves (apt simulation); not
   tested on real Ally hardware.
+- Booted in QEMU: kernel 7.2.11 and Mesa 26.1 reach the desktop; Steam is on
+  the taskbar and Steam + Gaming Mode in the start menu; on-screen keyboard and
+  power profiles active. Not tested on real ROG Xbox Ally hardware, and Steam
+  itself (it downloads its client on first start) wasn't run in the test VM.
